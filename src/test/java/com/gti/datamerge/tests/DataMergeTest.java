@@ -33,8 +33,8 @@ import static org.junit.Assert.*;
  * @author xach
  */
 public class DataMergeTest {
-	private final String connectionUrl = "jdbc:mysql://localhost:4000?user=root&password=root";
-	private final String connectionUrlDB2 = "jdbc:mysql://localhost:4000/database2?user=root&password=root";
+	private final String connectionUrl = "jdbc:mysql://192.168.99.100:4000?user=root&password=root";
+	private final String connectionUrlDB2 = "jdbc:mysql://192.168.99.100:4000/database2?user=root&password=root";
 
 	public DataMergeTest() {
 	}
