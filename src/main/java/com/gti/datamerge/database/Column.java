@@ -12,12 +12,18 @@ package com.gti.datamerge.database;
 public class Column {
 	private String name;	
 	private String type;
+	private Relationship relationship;
 
 	public Column(String name, String type) {
 		this.name = name;
 		this.type = type;
 	}
 	
+	public Column(String name, String type, Relationship relationship) {
+		this.name = name;
+		this.type = type;
+		this.relationship = relationship;
+	}
 	public String getName() {
 		return name;
 	}
@@ -25,5 +31,11 @@ public class Column {
 	public String getType() {
 		return type;
 	}
-
+	
+	public boolean hasRelationship() {
+		if(relationship != null){
+			return true;
+		}
+		return false;
+	}
 }
