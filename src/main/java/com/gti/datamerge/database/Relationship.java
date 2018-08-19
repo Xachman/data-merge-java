@@ -7,7 +7,7 @@ package com.gti.datamerge.database;
 
 /**
  *
- * @author ziron
+ * @author Xachman
  */
 public class Relationship {
 	private String table;

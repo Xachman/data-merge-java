@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author ziron
+ * @author Xachman
  */
 public class Table {
 	private List<Column> columns;

@@ -7,7 +7,7 @@ package com.gti.datamerge.database;
 
 /**
  *
- * @author ziron
+ * @author Xachman
  */
 public class Column {
 	private String name;	
