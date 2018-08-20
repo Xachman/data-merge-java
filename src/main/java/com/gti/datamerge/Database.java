@@ -35,12 +35,12 @@ public class Database {
 	}
 
 	public List<Action> mergeTable(String tableName, Database db) {
-		List<Row> result;
 		List<Row> rows = getRows(tableName);
 		List<Row> dbRows = db.getRows(tableName);
 		List<Action> actions = new ArrayList<>();
 
 		for(Row row: rows) {
+			boolean isIn = false;
 			for(Row dbRow: dbRows) {
 				int countIsE = 0;
 				int totalCount = 0;
@@ -49,23 +49,23 @@ public class Database {
 					String rowVal = (String) row.getMap().get(key);
 					String dbVal = (String) dbRow.getMap().get(key);
 					totalCount++;
-					if(dbVal == null || !dbVal.equals(rowVal)) {
-						update.put(key, dbVal);
-						continue;
+					if(dbVal != null && dbVal.equals(rowVal)) {
+						countIsE++;
 					}
-					countIsE++;
 				}	
-				System.out.println(dbRow.getMap());
-				if(countIsE != totalCount) {
-					actions.add(new Action("insert", row, tableName));	
+				if(countIsE == totalCount) {
+					isIn = true;
 				}
 			}
-		}			
-			
-
-
+			if(!isIn){
+				actions.add(insertAction(row, tableName));
+			}
+		}
+	
 		return actions;	
 	}
 
-	
+	private Action insertAction(Row row, String table) {
+		return new Action(Action.INSERT, row, table);
+	}	
 }

@@ -13,17 +13,18 @@ import com.gti.datamerge.database.Row;
  * @author Xachman
  */
 public class Action {
-	private String type;
+	private int type;
 	private Row data;
 	private String table;
+	public static final int INSERT = 1;
 
-	public Action(String type, Row data, String table) {
+	public Action(int type, Row data, String table) {
 		this.type = type;
 		this.data = data;
 		this.table = table;
 	}
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
