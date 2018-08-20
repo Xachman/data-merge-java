@@ -5,6 +5,7 @@
  */
 package com.gti.datamerge.database;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Map;
  * @author Xachman
  */
 public class Row {
-	private Map<String, String> entries;	
+	private Map<String, String> entries = new HashMap<String,String>();
 
 	public void add(String column, String value) {
 		entries.put(column, value);
