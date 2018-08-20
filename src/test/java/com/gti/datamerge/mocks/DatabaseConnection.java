@@ -61,9 +61,14 @@ public class DatabaseConnection implements DatabaseConnectionI {
 		rows2.add(row4);
 		rows2.add(row5);
 
+
 		tableRows.put("users_meta", rows2);
 
 		setupTables();
+	}
+
+	public DatabaseConnection(List<Map<String, Object>> tables) {
+		
 	}
 
 	private void setupTables() {

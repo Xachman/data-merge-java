@@ -1,0 +1,9 @@
+## YAML Template.
+---
+name: users
+columns:
+    - id
+    - username
+    - email
+    - address
+    - phone
