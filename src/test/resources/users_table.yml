@@ -7,3 +7,4 @@ columns:
     - email
     - address
     - phone
+primary_key: id

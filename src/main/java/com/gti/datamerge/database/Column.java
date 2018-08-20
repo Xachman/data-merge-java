@@ -11,26 +11,23 @@ package com.gti.datamerge.database;
  */
 public class Column {
 	private String name;	
-	private String type;
 	private Relationship relationship;
 
-	public Column(String name, String type) {
+	public Column(String name) {
 		this.name = name;
-		this.type = type;
 	}
 	
-	public Column(String name, String type, Relationship relationship) {
+	public Column(String name, String type) {
 		this.name = name;
-		this.type = type;
+	}
+	public Column(String name, Relationship relationship) {
+		this.name = name;
 		this.relationship = relationship;
 	}
 	public String getName() {
 		return name;
 	}
 
-	public String getType() {
-		return type;
-	}
 	
 	public boolean hasRelationship() {
 		if(relationship != null){

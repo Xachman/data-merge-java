@@ -67,8 +67,9 @@ public class DatabaseConnection implements DatabaseConnectionI {
 		setupTables();
 	}
 
-	public DatabaseConnection(List<Map<String, Object>> tables) {
-		
+	public DatabaseConnection(List<Map<String, Object>> tables, List<Map<String, Map<String, String>>> data) {
+		setupTables(tables);	
+		addTableData(data);
 	}
 
 	private void setupTables() {
@@ -93,7 +94,21 @@ public class DatabaseConnection implements DatabaseConnectionI {
 		Table usersMeta = new Table("users_meta", columns2);
 		tables.add(usersMeta);
 	}	
-	
+	public void setupTables(List<Map<String, Object>> tableMap) {
+		for(Map<String, Object> map: tableMap)	{
+			List<String> columns = (List<String>) map.get("columns");
+			List<Column> cols = new ArrayList<>();
+			for(String columnName: columns) {
+				cols.add(new Column(columnName));
+			}
+			tables.add(new Table(map.get("name").toString(), cols));
+		}
+	}
+	private void addTableData(List<Map<String, Map<String, String>>> data) {
+		for(Map<String, Map<String, String>> table: data ) {
+				
+		}
+	}	
 	@Override
 	public Row get(Table table, int id) {
 		return tableRows.get(table.getName()).get(id);
