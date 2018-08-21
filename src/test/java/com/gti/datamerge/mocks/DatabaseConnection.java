@@ -67,9 +67,9 @@ public class DatabaseConnection implements DatabaseConnectionI {
 		setupTables();
 	}
 
-	public DatabaseConnection(List<Map<String, Object>> tables, List<Map<String, Map<String, String>>> data) {
-		setupTables(tables);	
-		addTableData(data);
+	public DatabaseConnection(TablesYml tables, DataYml data) {
+		setupTables(tables.getTables());	
+		addData(data.getTables());
 	}
 
 	private void setupTables() {
@@ -94,21 +94,42 @@ public class DatabaseConnection implements DatabaseConnectionI {
 		Table usersMeta = new Table("users_meta", columns2);
 		tables.add(usersMeta);
 	}	
-	public void setupTables(List<Map<String, Object>> tableMap) {
-		for(Map<String, Object> map: tableMap)	{
-			List<String> columns = (List<String>) map.get("columns");
+	public void setupTables(List<TableYml> tableMap) {
+		for(TableYml table: tableMap)	{
+			List<String> columns = (List<String>) table.getColumns();
 			List<Column> cols = new ArrayList<>();
 			for(String columnName: columns) {
 				cols.add(new Column(columnName));
 			}
-			tables.add(new Table(map.get("name").toString(), cols));
+			tables.add(new Table(table.getName(), cols));
 		}
 	}
-	private void addTableData(List<Map<String, Map<String, String>>> data) {
-		for(Map<String, Map<String, String>> table: data ) {
-				
+	private void addData(List<TableDataYml> data) {
+		for(TableDataYml table: data ) {
+			List<Row> rows =  new ArrayList<>();
+			for(Map<String, String> map: table.getData()) {
+				Row row = new Row();
+				for(String key: map.keySet()) {
+					Object val = map.get(key);
+					if(val instanceof Integer) {	
+						row.add(key, Integer.toString((int)val));
+						continue;
+					}
+					row.add(key, val.toString());
+				}
+				rows.add(row);
+			}
+			tableRows.put(table.getName(), rows);
 		}
 	}	
+
+	private void addTableData(String tableName, Map<String, String> data) {
+		Row row = new Row();
+		for(String key: data.keySet()) {
+			row.add(key, data.get(key));
+		}
+	}
+
 	@Override
 	public Row get(Table table, int id) {
 		return tableRows.get(table.getName()).get(id);
