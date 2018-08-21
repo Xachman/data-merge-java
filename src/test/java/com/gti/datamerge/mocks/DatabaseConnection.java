@@ -22,78 +22,13 @@ public class DatabaseConnection implements DatabaseConnectionI {
 	private Map<String,List<Row>> tableRows = new HashMap<>();
 	private List<Table> tables = new ArrayList<>();
 	public DatabaseConnection() {
-		List<Row> rows1 = new ArrayList<>();
-		Row row1 = new Row();
-		row1.add("id","1");
-		row1.add("email","sandra@gmail.com");
-		row1.add("phone","1234567890");
-
-		Row row2 = new Row();
-		row2.add("id","2");
-		row2.add("email","tim@gmail.com");
-		row2.add("phone","0987654321");
-
-		rows1.add(row1);
-		rows1.add(row2);
-
-		tableRows.put("users", rows1);
-
-		List<Row> rows2 = new ArrayList<>();
-		Row row3 = new Row();
-		row3.add("id","1");
-		row3.add("user_id","1");
-		row3.add("meta_key","color");
-		row3.add("meta_value","red");
-
-		Row row4 = new Row();
-		row4.add("id","2");
-		row4.add("user_id","2");
-		row4.add("meta_key","color");
-		row4.add("meta_value","blue");
-
-		Row row5 = new Row();
-		row5.add("id","2");
-		row5.add("user_id","2");
-		row5.add("meta_key","food");
-		row5.add("meta_value","hot dog");
-
-		rows2.add(row3);
-		rows2.add(row4);
-		rows2.add(row5);
-
-
-		tableRows.put("users_meta", rows2);
-
-		setupTables();
 	}
 
 	public DatabaseConnection(TablesYml tables, DataYml data) {
 		setupTables(tables.getTables());	
-		addData(data.getTables());
+		setData(data.getTables());
 	}
 
-	private void setupTables() {
-		Column primKey = new Column("id", "Number");
-		Column email = new Column("email", "String");
-		Column phone = new Column("phone", "String");
-		List<Column> columns = new ArrayList<>();
-		columns.add(primKey);
-		columns.add(email);
-		columns.add(phone);
-		Table usersTable = new Table("users", columns);
-		tables.add(usersTable);
-
-		Column user_id = new Column("user_id", "Number");
-		Column meta_key = new Column("meta_key", "String");
-		Column meta_value = new Column("meta_value", "String");
-		List<Column> columns2 = new ArrayList<>();
-		columns2.add(primKey);
-		columns2.add(user_id);
-		columns2.add(meta_key);
-		columns2.add(meta_value);
-		Table usersMeta = new Table("users_meta", columns2);
-		tables.add(usersMeta);
-	}	
 	public void setupTables(List<TableYml> tableMap) {
 		for(TableYml table: tableMap)	{
 			List<String> columns = (List<String>) table.getColumns();
@@ -104,7 +39,7 @@ public class DatabaseConnection implements DatabaseConnectionI {
 			tables.add(new Table(table.getName(), cols));
 		}
 	}
-	private void addData(List<TableDataYml> data) {
+	public void setData(List<TableDataYml> data) {
 		for(TableDataYml table: data ) {
 			List<Row> rows =  new ArrayList<>();
 			for(Map<String, String> map: table.getData()) {
@@ -122,7 +57,7 @@ public class DatabaseConnection implements DatabaseConnectionI {
 			tableRows.put(table.getName(), rows);
 		}
 	}	
-
+	
 	private void addTableData(String tableName, Map<String, String> data) {
 		Row row = new Row();
 		for(String key: data.keySet()) {
