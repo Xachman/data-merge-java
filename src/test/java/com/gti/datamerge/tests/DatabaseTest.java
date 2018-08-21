@@ -10,7 +10,7 @@ import com.gti.datamerge.Database;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.mocks.DataYml;
 import com.gti.datamerge.mocks.DatabaseConnection;
-import com.gti.datamerge.mocks.DatabaseConnection2;
+import com.gti.datamerge.mocks.TableDataYml;
 import com.gti.datamerge.mocks.TablesYml;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,22 +60,21 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testTableMerge() {
-		DatabaseConnection dbc = new DatabaseConnection();
-		DatabaseConnection2 dbc2 = new DatabaseConnection2();
-		
-		Database db1 = new Database(dbc);
+	public void testTableMerge() throws FileNotFoundException {
+		Database db1 = new Database(dbc1);
 		Database db2 = new Database(dbc2);
 
 		List<Action> actions = db2.mergeTable("users",db1);
 
+		List<Action> expect = new ArrayList<>();
 
-		assertEquals(1, actions.size());
-		
+        
+          
+
+
+		List<TableDataYml> tableData = db2Data.getTables();
+
+
 	}
 	
-	@Test
-	public void testLargeTableMerge() {
-		fail("nothing to see here");
-	}
 }

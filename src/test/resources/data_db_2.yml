@@ -23,6 +23,11 @@ tables:
           email: john@gmail.com
           address: 118 Elizabeth St
           phone: 5550987654
+        - id: 5
+          username: erick
+          email: erick@gmail.com
+          address: 204 Wilson St
+          phone: 5558907654
     - name: users_meta
       data:
         - id: 1
@@ -49,3 +54,11 @@ tables:
           user_id: 4
           meta_key: color
           meta_value: black
+        - id: 7
+          user_id: 5
+          meta_key: color
+          meta_value: blue
+        - id: 8
+          user_id: 6
+          meta_key: food
+          meta_value: potato

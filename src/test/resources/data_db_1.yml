@@ -18,6 +18,16 @@ tables:
           email: jim@hotmail.com
           address: 789 Broad Rd
           phone: 55545609876
+        - id: 4
+          username: willy
+          email: willy@yahoo.com
+          address: 404 Log Rd
+          phone: 5557654321
+        - id: 5
+          username: henrik
+          email: henrik@yahoo.com
+          address: 504 Willy Rd
+          phone: 5558970654
     - name: users_meta
       data:
         - id: 1
@@ -44,3 +54,15 @@ tables:
           user_id: 3
           meta_key: color
           meta_value: pink
+        - id: 7
+          user_id: 4
+          meta_key: color
+          meta_value: green
+        - id: 8
+          user_id: 5
+          meta_key: food
+          meta_value: chicken
+        - id: 9
+          user_id: 5
+          meta_key: color
+          meta_value: brown
