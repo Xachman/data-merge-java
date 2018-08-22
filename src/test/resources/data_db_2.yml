@@ -59,6 +59,6 @@ tables:
           meta_key: color
           meta_value: blue
         - id: 8
-          user_id: 6
+          user_id: 5
           meta_key: food
           meta_value: potato

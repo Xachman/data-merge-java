@@ -7,23 +7,21 @@ package com.gti.datamerge.tests;
 
 import com.gti.datamerge.Action;
 import com.gti.datamerge.Database;
-import com.gti.datamerge.database.Row;
 import com.gti.datamerge.mocks.DataYml;
 import com.gti.datamerge.mocks.DatabaseConnection;
+import com.gti.datamerge.mocks.ExpectActionYml;
+import com.gti.datamerge.mocks.ExpectActionsYml;
 import com.gti.datamerge.mocks.TableDataYml;
 import com.gti.datamerge.mocks.TablesYml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import org.yaml.snakeyaml.constructor.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
@@ -64,16 +62,16 @@ public class DatabaseTest {
 		Database db1 = new Database(dbc1);
 		Database db2 = new Database(dbc2);
 
-		List<Action> actions = db2.mergeTable("users",db1);
+		List<Action> actions = db1.mergeTableActions("users",db2);
 
-		List<Action> expect = new ArrayList<>();
+		InputStream actionsInput = new FileInputStream(new File(getResource("expect_actions.yml")));
+		ExpectActionsYml expectActions = new Yaml().loadAs(actionsInput, ExpectActionsYml.class);
 
-        
-          
-
-
-		List<TableDataYml> tableData = db2Data.getTables();
-
+        int count = 0;
+        for(ExpectActionYml eAction: expectActions.getActions()) {
+            Assert.assertEquals(eAction.getAction(), actions.get(count));
+            count++;
+        }        
 
 	}
 	
