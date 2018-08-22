@@ -34,9 +34,14 @@ public class Database {
 		return dbc.getAll(tableName);
 	}
 
-	public List<Action> mergeTable(String tableName, Database db) {
-		List<Row> rows = getRows(tableName);
-		List<Row> dbRows = db.getRows(tableName);
+
+	private Action insertAction(Row row, String table) {
+		return new Action(Action.INSERT, row, table);
+	}	
+
+    public List<Action> mergeTableActions(String tableName, Database db) {
+		List<Row> rows = db.getRows(tableName);
+		List<Row> dbRows = getRows(tableName);
 		List<Action> actions = new ArrayList<>();
 
 		for(Row row: rows) {
@@ -44,7 +49,6 @@ public class Database {
 			for(Row dbRow: dbRows) {
 				int countIsE = 0;
 				int totalCount = 0;
-				Map<String,String> update = new HashMap<>();
 				for(String key: (Set<String>) row.getMap().keySet()) {
 					String rowVal = (String) row.getMap().get(key);
 					String dbVal = (String) dbRow.getMap().get(key);
@@ -63,9 +67,5 @@ public class Database {
 		}
 	
 		return actions;	
-	}
-
-	private Action insertAction(Row row, String table) {
-		return new Action(Action.INSERT, row, table);
-	}	
+    }
 }
