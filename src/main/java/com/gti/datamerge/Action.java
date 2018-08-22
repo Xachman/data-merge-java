@@ -35,4 +35,22 @@ public class Action {
 	public String getTableName() {
 		return table;
 	}	
+
+    @Override
+    public boolean equals(Object o) {
+        if(o == this) return true;
+        if(!(o instanceof Action))return false;
+
+        Action a = (Action) o;
+
+        if(a.getTableName().equals(this.getTableName()) && 
+           a.getType() == getType() &&
+           a.getData().equals(getData())) return true;
+                
+        
+        System.out.println(a.getTableName().equals(this.getTableName()));
+        System.out.println(a.getType() == getType());
+        System.out.println(a.getData().equals(getData()));
+        return false;
+    }
 }
