@@ -9,7 +9,7 @@ tables:
         - meta_value
       primary_key: id
       relation:
-          key: user_id
+          column: user_id
           table: users
     - name: users
       columns:

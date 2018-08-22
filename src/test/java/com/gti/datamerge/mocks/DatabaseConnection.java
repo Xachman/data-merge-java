@@ -5,8 +5,9 @@
  */
 package com.gti.datamerge.mocks;
 
-import com.gti.datamerge.DatabaseConnectionI;
+import com.gti.datamerge.AbstractDatabaseConnection;
 import com.gti.datamerge.database.Column;
+import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.Map;
  *
  * @author Xachman
  */
-public class DatabaseConnection implements DatabaseConnectionI {
+public class DatabaseConnection extends AbstractDatabaseConnection {
 	private Map<String,List<Row>> tableRows = new HashMap<>();
 	private List<Table> tables = new ArrayList<>();
 	public DatabaseConnection() {
@@ -41,8 +42,8 @@ public class DatabaseConnection implements DatabaseConnectionI {
             if(table.getPrimary_key() != null) {
                 for(TableDataYml tData: data) {
                     if(tData.getName().equals(table.getName())) {
-                        for(Map<String, String> map: tData.getData()) {
-                            int newInc = new Integer(map.get(table.getPrimary_key()));
+                        for(Map<String, Object> map: tData.getData()) {
+                            newInc = (int) map.get(table.getPrimary_key());
                             if( newInc > increment) {
                                 increment = newInc;
                             }
@@ -50,13 +51,18 @@ public class DatabaseConnection implements DatabaseConnectionI {
                     }
                 }
             }
-			tables.add(new Table(table.getName(), cols, table.getPrimary_key(), newInc));
+
+            Relationship relationship = null;
+            if(table.getRelation() != null && table.getRelation().size() > 0) {
+                relationship = new Relationship(table.getRelation().get("table"), table.getRelation().get("column"));
+            }
+			tables.add(new Table(table.getName(), cols, table.getPrimary_key(), newInc, relationship));
 		}
 	}
 	public void setData(List<TableDataYml> data) {
 		for(TableDataYml table: data ) {
 			List<Row> rows =  new ArrayList<>();
-			for(Map<String, String> map: table.getData()) {
+			for(Map<String, Object> map: table.getData()) {
 				Row row = new Row();
 				for(String key: map.keySet()) {
 					Object val = map.get(key);

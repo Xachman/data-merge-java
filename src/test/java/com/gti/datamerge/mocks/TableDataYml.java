@@ -15,12 +15,12 @@ import java.util.Map;
 public class TableDataYml {
 	
 	private String name;
-	private List<Map<String,String>> data;
+	private List<Map<String,Object>> data;
 
 	public TableDataYml() {
 		
 	}
-	public TableDataYml(String name, List<Map<String, String>> data) {
+	public TableDataYml(String name, List<Map<String, Object>> data) {
 		this.name = name;
 		this.data = data;
 	}
@@ -33,11 +33,11 @@ public class TableDataYml {
 		this.name = name;
 	}
 
-	public List<Map<String, String>> getData() {
+	public List<Map<String, Object>> getData() {
 		return data;
 	}
 
-	public void setData(List<Map<String, String>> data) {
+	public void setData(List<Map<String, Object>> data) {
 		this.data = data;
 	}
 }

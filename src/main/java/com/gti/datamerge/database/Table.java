@@ -16,6 +16,7 @@ public class Table {
 	private String name;
     private String primaryKey;
     private int increment;
+    private Relationship relationship;
 	
 	public Table(String name, List<Column> cols) {
 		columns = cols;	
@@ -27,6 +28,13 @@ public class Table {
 		this.name = name;
         this.primaryKey = pk;
         this.increment = increment;
+	}
+	public Table(String name, List<Column> cols, String pk, int increment, Relationship relationship) {
+		columns = cols;	
+		this.name = name;
+        this.primaryKey = pk;
+        this.increment = increment;
+        this.relationship = relationship;
 	}
 	public String getName() {
 		return name;
@@ -43,5 +51,19 @@ public class Table {
     public int getIncrement() {
         return increment;
     }
-
+    
+    public boolean hasRelationship() {
+        if(relationship != null) {
+            return true;
+        }
+        return false;
+    }
+    public boolean hasRelationship(Table table) {
+        if(relationship == null) return false;
+        if(getRelationship().getTable().equals(table.getName())) return true;
+        return false;
+    }
+    public Relationship getRelationship() {
+        return relationship;
+    }
 }

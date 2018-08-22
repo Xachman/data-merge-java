@@ -7,22 +7,23 @@ package com.gti.datamerge;
 
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author Xachman
  */
-abstract class AbstractDatabaseConnection implements DatabaseConnectionI{
-	private String name;
-	private String password;
-	private String host;
-	private String user;	
+public abstract class AbstractDatabaseConnection implements DatabaseConnectionI{
+    @Override
+    public List<Table> getRelatedTables(Table table) {
+        List<Table> result = new ArrayList<>();
+        for(Table tItem: getAllTables())  {
+            if(tItem.hasRelationship(table)) {
+                result.add(tItem);
+            }
+        }
 
-	public AbstractDatabaseConnection(String name, String password, String host, String user) {
-		this.name = name;
-		this.password = password;
-		this.host = host;
-		this.user = user;
-	}	
+        return result;
+    }
 }

@@ -8,11 +8,8 @@ package com.gti.datamerge;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 /**
  *
@@ -51,8 +48,10 @@ public class Database {
 		List<Row> dbRows = getRows(tableName);
 		List<Action> actions = new ArrayList<>();
         Table table = getTable(tableName);
-        boolean hasPrimaryKey =  table.hasPrimaryKey();
+        List<Table> relatedTables = dbc.getRelatedTables(table);
         int increment = table.getIncrement();
+
+        System.out.println(relatedTables);
 
 		for(Row row: rows) {
 			boolean isIn = false;
