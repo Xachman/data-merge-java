@@ -17,7 +17,7 @@ import java.util.Set;
 public class Row {
 	private Map<String, String> entries = new HashMap<String,String>();
 
-	public void add(String column, String value) {
+	public void put(String column, String value) {
 		entries.put(column, value);
 	}
 

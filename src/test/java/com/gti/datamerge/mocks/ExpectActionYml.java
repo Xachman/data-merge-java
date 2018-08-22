@@ -57,7 +57,7 @@ public class ExpectActionYml {
         Row row = new Row();
 
         for(String key: getRow().keySet()) {
-            row.add(key, getRow().get(key));
+            row.put(key, getRow().get(key));
         }
         
         return new Action(Action.INSERT, row, getTable());

@@ -25,18 +25,32 @@ public class DatabaseConnection implements DatabaseConnectionI {
 	}
 
 	public DatabaseConnection(TablesYml tables, DataYml data) {
-		setupTables(tables.getTables());	
+		setupTables(tables.getTables(), data.getTables());	
 		setData(data.getTables());
 	}
 
-	public void setupTables(List<TableYml> tableMap) {
+	public void setupTables(List<TableYml> tableMap, List<TableDataYml> data) {
 		for(TableYml table: tableMap)	{
 			List<String> columns = (List<String>) table.getColumns();
 			List<Column> cols = new ArrayList<>();
 			for(String columnName: columns) {
 				cols.add(new Column(columnName));
 			}
-			tables.add(new Table(table.getName(), cols));
+            int increment = 0;
+            int newInc = 0;
+            if(table.getPrimary_key() != null) {
+                for(TableDataYml tData: data) {
+                    if(tData.getName().equals(table.getName())) {
+                        for(Map<String, String> map: tData.getData()) {
+                            int newInc = new Integer(map.get(table.getPrimary_key()));
+                            if( newInc > increment) {
+                                increment = newInc;
+                            }
+                        }
+                    }
+                }
+            }
+			tables.add(new Table(table.getName(), cols, table.getPrimary_key(), newInc));
 		}
 	}
 	public void setData(List<TableDataYml> data) {
@@ -47,10 +61,10 @@ public class DatabaseConnection implements DatabaseConnectionI {
 				for(String key: map.keySet()) {
 					Object val = map.get(key);
 					if(val instanceof Integer) {	
-						row.add(key, Integer.toString((int)val));
+						row.put(key, Integer.toString((int)val));
 						continue;
 					}
-					row.add(key, val.toString());
+					row.put(key, val.toString());
 				}
 				rows.add(row);
 			}
@@ -61,7 +75,7 @@ public class DatabaseConnection implements DatabaseConnectionI {
 	private void addTableData(String tableName, Map<String, String> data) {
 		Row row = new Row();
 		for(String key: data.keySet()) {
-			row.add(key, data.get(key));
+			row.put(key, data.get(key));
 		}
 	}
 
@@ -85,5 +99,10 @@ public class DatabaseConnection implements DatabaseConnectionI {
 	public List<Table> getAllTables() {
 		return tables;
 	}
+
+    @Override
+    public int getNextIncrement(String tableName) {
+        return tableRows.get(tableName).size();
+    }
 	
 }

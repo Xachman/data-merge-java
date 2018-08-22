@@ -58,7 +58,7 @@ public class DatabaseTest {
 	}
 
 	@Test
-	public void testTableMerge() throws FileNotFoundException {
+	public void testTableMerge() throws FileNotFoundException, Exception {
 		Database db1 = new Database(dbc1);
 		Database db2 = new Database(dbc2);
 

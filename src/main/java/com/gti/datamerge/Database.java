@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 /**
  *
@@ -34,15 +35,24 @@ public class Database {
 		return dbc.getAll(tableName);
 	}
 
-
-	private Action insertAction(Row row, String table) {
-		return new Action(Action.INSERT, row, table);
+    private Table getTable(String tableName) throws Exception {
+        for(Table table: tables) {
+            if(table.getName().equals(tableName))return table;
+        } 
+        throw new Exception("Table not found");
+    }
+            
+	private Action insertAction(Row row, Table table) {
+		return new Action(Action.INSERT, row, table.getName());
 	}	
 
-    public List<Action> mergeTableActions(String tableName, Database db) {
+    public List<Action> mergeTableActions(String tableName, Database db) throws Exception {
 		List<Row> rows = db.getRows(tableName);
 		List<Row> dbRows = getRows(tableName);
 		List<Action> actions = new ArrayList<>();
+        Table table = getTable(tableName);
+        boolean hasPrimaryKey =  table.hasPrimaryKey();
+        int increment = table.getIncrement();
 
 		for(Row row: rows) {
 			boolean isIn = false;
@@ -62,7 +72,14 @@ public class Database {
 				}
 			}
 			if(!isIn){
-				actions.add(insertAction(row, tableName));
+                if(table.hasPrimaryKey()) {
+                    increment++;
+                    row.put(table.getPrimaryKey(), Integer.toString(increment));
+				    actions.add(insertAction(row, table));
+                }else{
+				    actions.add(insertAction(row, table));
+                }
+                
 			}
 		}
 	

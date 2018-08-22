@@ -18,4 +18,5 @@ public interface DatabaseConnectionI {
 	public List<Row> getAll(Table table);	
 	public List<Row> getAll(String tableName);	
 	public List<Table> getAllTables();	
+    public int getNextIncrement(String tableName);
 }
