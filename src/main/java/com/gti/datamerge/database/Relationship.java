@@ -12,10 +12,12 @@ package com.gti.datamerge.database;
 public class Relationship {
 	private String table;
 	private String column;
+    private String parentColumn;
 
-	public Relationship(String table, String column) {
+	public Relationship(String table, String column, String parentColumn) {
 		this.table = table;
 		this.column = column;
+        this.parentColumn = parentColumn;
 	}
 
 	public String getTable() {
@@ -26,5 +28,7 @@ public class Relationship {
 		return column;
 	}
 
-	
+    public String getParentColumn() {
+        return parentColumn;
+    }	
 }

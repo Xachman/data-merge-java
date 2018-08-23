@@ -31,7 +31,7 @@ public class Action {
 	public Row getData() {
 		return data;
 	}
-
+   
 	public String getTableName() {
 		return table;
 	}	

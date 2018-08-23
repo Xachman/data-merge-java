@@ -54,7 +54,7 @@ public class DatabaseConnection extends AbstractDatabaseConnection {
 
             Relationship relationship = null;
             if(table.getRelation() != null && table.getRelation().size() > 0) {
-                relationship = new Relationship(table.getRelation().get("table"), table.getRelation().get("column"));
+                relationship = new Relationship(table.getRelation().get("table"), table.getRelation().get("column"), table.getRelation().get("parent_column"));
             }
 			tables.add(new Table(table.getName(), cols, table.getPrimary_key(), newInc, relationship));
 		}

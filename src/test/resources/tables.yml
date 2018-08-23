@@ -11,6 +11,7 @@ tables:
       relation:
           column: user_id
           table: users
+          parent_column: id
     - name: users
       columns:
         - id
