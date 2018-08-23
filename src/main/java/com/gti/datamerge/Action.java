@@ -46,11 +46,6 @@ public class Action {
         if(a.getTableName().equals(this.getTableName()) && 
            a.getType() == getType() &&
            a.getData().equals(getData())) return true;
-                
-        
-        System.out.println(a.getTableName().equals(this.getTableName()));
-        System.out.println(a.getType() == getType());
-        System.out.println(a.getData().equals(getData()));
         return false;
     }
 }

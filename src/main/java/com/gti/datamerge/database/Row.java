@@ -43,8 +43,6 @@ public class Row {
         if(!(o instanceof Row)) return false;
 
         Row r = (Row) o;
-        System.out.println(r.getMap());
-        System.out.println(getMap());
         if(r.getMap().size() != r.getMap().size()) return false;
         for(String column: r.getColumns()) {
             if(!r.getVal(column).equals(getVal(column))) return false;
