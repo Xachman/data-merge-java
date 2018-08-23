@@ -5,6 +5,7 @@
  */
 package com.gti.datamerge;
 
+import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class Database {
 	private List<Table> tables;
 	private DatabaseConnectionI dbc;
+    private List<Action> actions = new ArrayList<>();
 
 	public Database(DatabaseConnectionI dbc) {
 		this.dbc = dbc;
@@ -42,11 +44,23 @@ public class Database {
 	private Action insertAction(Row row, Table table) {
 		return new Action(Action.INSERT, row, table.getName());
 	}	
+    private void actionsByRelation(Table table, String id, Database db, int relationId) {
+		List<Row> dbRows = db.getRows(table.getName());
+        Relationship relationship = table.getRelationship();
+        int increment = table.getIncrement();
+        for(Row row: dbRows) {
 
+            if(row.getVal(relationship.getColumn()).equals(id)) {
+                increment++;
+                row.put(relationship.getColumn(), Integer.toString(relationId));
+                addAction(Action.INSERT, row, table, increment);
+            }
+        }
+        
+    }
     public List<Action> mergeTableActions(String tableName, Database db) throws Exception {
 		List<Row> rows = db.getRows(tableName);
 		List<Row> dbRows = getRows(tableName);
-		List<Action> actions = new ArrayList<>();
         Table table = getTable(tableName);
         List<Table> relatedTables = dbc.getRelatedTables(table);
         int increment = table.getIncrement();
@@ -54,34 +68,45 @@ public class Database {
         System.out.println(relatedTables);
 
 		for(Row row: rows) {
-			boolean isIn = false;
-			for(Row dbRow: dbRows) {
-				int countIsE = 0;
-				int totalCount = 0;
-				for(String key: (Set<String>) row.getMap().keySet()) {
-					String rowVal = (String) row.getMap().get(key);
-					String dbVal = (String) dbRow.getMap().get(key);
-					totalCount++;
-					if(dbVal != null && dbVal.equals(rowVal)) {
-						countIsE++;
-					}
-				}	
-				if(countIsE == totalCount) {
-					isIn = true;
-				}
-			}
-			if(!isIn){
-                if(table.hasPrimaryKey()) {
-                    increment++;
-                    row.put(table.getPrimaryKey(), Integer.toString(increment));
-				    actions.add(insertAction(row, table));
-                }else{
-				    actions.add(insertAction(row, table));
+			if(!isRowInRows(row, dbRows)){
+                String id = row.getVal(table.getPrimaryKey());
+                increment++;
+                addAction(Action.INSERT, row, table, increment);
+                for(Table rTable: relatedTables) {
+                    actionsByRelation(rTable, id, db, increment);
                 }
-                
 			}
 		}
 	
 		return actions;	
     }
+
+    private void addAction(int type, Row row, Table table, int increment) {
+        if(table.hasPrimaryKey()) {
+            row.put(table.getPrimaryKey(), Integer.toString(increment));
+            actions.add(insertAction(row, table));
+        }else{
+            actions.add(insertAction(row, table));
+        }
+    }
+
+    private boolean isRowInRows(Row row, List<Row> rows) {
+        for(Row dbRow: rows) {
+            int countIsE = 0;
+            int totalCount = 0;
+            for(String key: (Set<String>) row.getMap().keySet()) {
+                String rowVal = (String) row.getMap().get(key);
+                String dbVal = (String) dbRow.getMap().get(key);
+                totalCount++;
+                if(dbVal != null && dbVal.equals(rowVal)) {
+                    countIsE++;
+                }
+            }	
+            if(countIsE == totalCount) {
+                return true;
+            }
+        }
+        return false;
+    } 
 }
+
