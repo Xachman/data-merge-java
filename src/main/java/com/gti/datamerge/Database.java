@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,7 +33,15 @@ public class Database {
 	public void merge(Database database) {
 		
 	}
-
+    public void mergeTable(String name, Database db) {
+        try {
+            List<Action> actions = mergeTableActions(name, db);
+            dbc.setActions(actions);
+            dbc.commit();
+        } catch (Exception ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 	public List<Row> getRows(String tableName) {
 		return dbc.getAll(tableName);
 	}

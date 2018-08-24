@@ -20,4 +20,6 @@ public interface DatabaseConnectionI {
 	public List<Table> getAllTables();	
     public int getNextIncrement(String tableName);
     public List<Table> getRelatedTables(Table table);
+    public void setActions(List<Action> actions);
+    public void commit();
 }
