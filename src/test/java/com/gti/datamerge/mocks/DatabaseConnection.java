@@ -6,6 +6,7 @@
 package com.gti.datamerge.mocks;
 
 import com.gti.datamerge.AbstractDatabaseConnection;
+import com.gti.datamerge.Action;
 import com.gti.datamerge.database.Column;
 import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
@@ -109,6 +110,16 @@ public class DatabaseConnection extends AbstractDatabaseConnection {
     @Override
     public int getNextIncrement(String tableName) {
         return tableRows.get(tableName).size();
+    }
+
+    @Override
+    public void setActions(List<Action> actions) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void commit() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 	
 }
