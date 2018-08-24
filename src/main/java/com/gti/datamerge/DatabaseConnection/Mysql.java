@@ -7,6 +7,7 @@ package com.gti.datamerge.DatabaseConnection;
 
 import com.gti.datamerge.AbstractDatabaseConnection;
 import com.gti.datamerge.Action;
+import com.gti.datamerge.database.Column;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
 import java.sql.Connection;
@@ -116,7 +117,52 @@ public class Mysql extends AbstractDatabaseConnection {
 
     @Override
     public List<Table> getAllTables() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Table> tables = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = connection();
+            String sql = "SHOW TABLES";
+            Statement stmt = conn.createStatement(); 
+            ResultSet rs = stmt.executeQuery(sql);
+            System.out.println(rs.getMetaData().getColumnName(1));
+            while(rs.next()) {
+                String tableName = rs.getString(1);
+                Table table = createTable(tableName, conn);
+
+                tables.add(table);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null)
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+        return tables;
+    }
+
+    private Table createTable(String tableName, Connection conn) throws SQLException {
+        Statement stmt = conn.createStatement();
+        String sql = "DESCRIBE "+tableName; 
+        ResultSet rs = stmt.executeQuery(sql);
+        List<Column> columns = new ArrayList<>();
+        System.out.println(sql);
+        String primaryKey = null;
+        while(rs.next()) {
+            String name = rs.getString(1);
+            String key = rs.getString(4);
+            if(key.equals("PRI")) {
+                primaryKey = name;
+            }
+            
+            columns.add(new Column(name));
+        }
+        return new Table(tableName, columns, primaryKey, 0);
     }
 
     @Override
