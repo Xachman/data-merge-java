@@ -11,6 +11,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import com.gti.datamerge.DataMerge;
+import com.gti.datamerge.Database;
+import com.gti.datamerge.DatabaseConnection.Mysql;
+import com.gti.datamerge.DatabaseConnectionI;
 import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
@@ -90,10 +93,15 @@ public class DataMergeTest {
 	@Test
 	public void testDataMerge() {
 		// TODO review the generated test code and remove the default call to fail.
+        DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://192.168.99.100:4000?user=root&password=root&database=database1");
 
-		DataMerge dataMerge = new DataMerge();
 
-		dataMerge.mergeData();
+        DatabaseConnectionI dbc2 = new Mysql("jdbc:mysql://192.168.99.100:4000?user=root&password=root&database=database2");
+
+        Database db1 = new Database(dbc1);
+        Database db2 = new Database(dbc2);
+
+        db1.mergeTable("users", db2);
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(connectionUrlDB2);
