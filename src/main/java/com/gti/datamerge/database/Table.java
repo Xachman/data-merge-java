@@ -66,4 +66,8 @@ public class Table {
     public Relationship getRelationship() {
         return relationship;
     }
+
+    public List<Column> getColumns() {
+        return columns;
+    }
 }

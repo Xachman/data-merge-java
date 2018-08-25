@@ -29,6 +29,7 @@ import java.sql.Types;
  */
 public class Mysql extends AbstractDatabaseConnection {
     private String connectionUrl; 
+    private List<Action> actions;
     public Mysql(String conn) {
        this.connectionUrl = conn; 
     }
@@ -214,12 +215,46 @@ public class Mysql extends AbstractDatabaseConnection {
 
     @Override
     public void setActions(List<Action> actions) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.actions = actions;
     }
 
     @Override
     public void commit() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(Action action: actions){
+
+        }
     }
-    
+    private void executeAction(Action action) {
+        switch(action.getType()) {
+            case Action.INSERT:
+                break;
+        }
+    }    
+    private void executeInsert(Action action) {
+        
+        String sql = "INSERT INTO "+
+              action.getTableName()+" "+
+              "(`"+String.join("`,`", action.getData().getColumns())+"`) VALUES "+
+              "("+action.getData().ge+")";
+    }
+
+    private String formatRowForInsert(String tableName, Row row) {
+        String str = "";
+        Table table = getTable(tableName);
+        for(Column column: table.getColumns()) {
+            str += getFormatValue();
+        }
+        return str;
+    }
+    private String getFormatValue(Column column, String value) {
+
+    }
+
+    private Table getTable(String tableName) {
+        for(Table table: getAllTables()) {
+            if(table.getName().equals(tableName))
+                return table;
+        }
+        return null;
+    }
 }
