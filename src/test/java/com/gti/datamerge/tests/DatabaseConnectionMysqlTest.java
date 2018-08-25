@@ -76,7 +76,7 @@ public class DatabaseConnectionMysqlTest {
         Assert.assertEquals("id", table.getPrimaryKey());
         Assert.assertEquals("user_id", table.getRelationship().getColumn());
         Assert.assertEquals("id", table.getRelationship().getParentColumn());
-        Assert.assertEquals(1, table.getIncrement());
+        Assert.assertEquals(5, table.getIncrement());
 
     }
 }

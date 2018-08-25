@@ -164,7 +164,7 @@ public class Mysql extends AbstractDatabaseConnection {
             
             columns.add(new Column(name));
         }
-        return new Table(tableName, columns, primaryKey,  0, relationship);
+        return new Table(tableName, columns, primaryKey,  getTableIncrement(tableName, conn)-1, relationship);
     }
 
     private Relationship getTableRelationship(String tableName, Connection conn) throws SQLException {
@@ -186,18 +186,27 @@ public class Mysql extends AbstractDatabaseConnection {
 
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()) {
-
-            System.out.println("-------");
-            System.out.println(rs.getString("TABLE_NAME"));
             String column = rs.getString("COLUMN_NAME");
             String refTable = rs.getString("REFERENCED_TABLE_NAME");
             String refColumn = rs.getString("REFERENCED_COLUMN_NAME");
-            System.out.println("-------");
             return new Relationship(refTable, column, refColumn);
         }
         return null;
     }
+    private int getTableIncrement(String table, Connection conn) throws SQLException {
+        String sql = "SELECT `AUTO_INCREMENT`\n" +
+                    "FROM  INFORMATION_SCHEMA.TABLES\n" +
+                    "WHERE TABLE_SCHEMA = SCHEMA()\n" +
+                    "AND   TABLE_NAME   = '"+table+"';";
 
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+
+        while(rs.next()) {
+            return rs.getInt(1);
+        }
+        return 0;
+    }
     @Override
     public int getNextIncrement(String tableName) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
