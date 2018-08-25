@@ -8,6 +8,7 @@ package com.gti.datamerge.DatabaseConnection;
 import com.gti.datamerge.AbstractDatabaseConnection;
 import com.gti.datamerge.Action;
 import com.gti.datamerge.database.Column;
+import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
 import java.sql.Connection;
@@ -153,6 +154,7 @@ public class Mysql extends AbstractDatabaseConnection {
         List<Column> columns = new ArrayList<>();
         System.out.println(sql);
         String primaryKey = null;
+        Relationship relationship = getTableRelationship(tableName, conn);
         while(rs.next()) {
             String name = rs.getString(1);
             String key = rs.getString(4);
@@ -162,7 +164,38 @@ public class Mysql extends AbstractDatabaseConnection {
             
             columns.add(new Column(name));
         }
-        return new Table(tableName, columns, primaryKey, 0);
+        return new Table(tableName, columns, primaryKey,  0, relationship);
+    }
+
+    private Relationship getTableRelationship(String tableName, Connection conn) throws SQLException {
+        
+        String sql = "SELECT \n" +
+                    "  `TABLE_SCHEMA`,                          -- Foreign key schema\n" +
+                    "  `TABLE_NAME`,                            -- Foreign key table\n" +
+                    "  `COLUMN_NAME`,                           -- Foreign key column\n" +
+                    "  `REFERENCED_TABLE_SCHEMA`,               -- Origin key schema\n" +
+                    "  `REFERENCED_TABLE_NAME`,                 -- Origin key table\n" +
+                    "  `REFERENCED_COLUMN_NAME`                 -- Origin key column\n" +
+                    "FROM\n" +
+                    "  `INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE`  -- Will fail if user don't have privilege\n" +
+                    "WHERE\n" +
+                    "  `TABLE_SCHEMA` = SCHEMA()                -- Detect current schema in USE \n" +
+                    "  AND `TABLE_NAME`=\""+tableName+"\""+
+                    "  AND `REFERENCED_TABLE_NAME` IS NOT NULL; -- Only tables with foreign keys";
+        Statement stmt = conn.createStatement();
+
+        ResultSet rs = stmt.executeQuery(sql);
+        while (rs.next()) {
+
+            System.out.println("-------");
+            System.out.println(rs.getString("TABLE_NAME"));
+            String column = rs.getString("COLUMN_NAME");
+            String refTable = rs.getString("REFERENCED_TABLE_NAME");
+            String refColumn = rs.getString("REFERENCED_COLUMN_NAME");
+            System.out.println("-------");
+            return new Relationship(refTable, column, refColumn);
+        }
+        return null;
     }
 
     @Override
