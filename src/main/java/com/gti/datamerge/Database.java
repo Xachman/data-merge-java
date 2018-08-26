@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -75,6 +75,7 @@ public class Database {
 		List<Row> rows = db.getRows(tableName);
 		List<Row> dbRows = getRows(tableName);
         List<Row> addRows = new ArrayList<>();
+        System.out.println(rows);
         Table table = getTable(tableName);
         List<Table> relatedTables = dbc.getRelatedTables(table);
         Map<String, String> ids = new HashMap<>();

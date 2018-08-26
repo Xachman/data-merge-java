@@ -52,4 +52,17 @@ public class Row {
         return true;
 
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        for(String column: getColumns())        {
+            sb.append(" ");
+            sb.append(getVal(column));
+            sb.append(" ");
+        }
+
+        return sb.toString();
+    }
 }

@@ -53,16 +53,6 @@ public class Mysql extends AbstractDatabaseConnection {
         return conn;
 
     }
-   
-    private String columnToString(int type, ResultSet rs, int id) throws SQLException {
-       switch(type) {
-            case Types.INTEGER:
-                return Integer.toString(rs.getInt(id));
-            default:
-                return rs.getString(id);
-
-       } 
-    }
     
     @Override
     public Row get(Table table, int id) {
@@ -92,16 +82,16 @@ public class Mysql extends AbstractDatabaseConnection {
         List<Row> rows = new ArrayList<>();
 
         ResultSetMetaData rsmd = rs.getMetaData();
-        Row row = new Row();
 
         while(rs.next()) {
-            for(int i = 0; i < rsmd.getColumnCount(); i++) {
+            Row row = new Row();
+            for(int i = 1; i <= rsmd.getColumnCount(); i++) {
                 int type = rsmd.getColumnType(i);
                 String columnName = rsmd.getColumnName(i);
-                
-                row.put(columnName, columnToString(type, rs, i));
-                rows.add(row);
+                 
+                row.put(columnName, rs.getString(i));
             }
+            rows.add(row);
         }
         return rows;
     }
@@ -126,7 +116,6 @@ public class Mysql extends AbstractDatabaseConnection {
             String sql = "SHOW TABLES";
             Statement stmt = conn.createStatement(); 
             ResultSet rs = stmt.executeQuery(sql);
-            System.out.println(rs.getMetaData().getColumnName(1));
             while(rs.next()) {
                 String tableName = rs.getString(1);
                 Table table = createTable(tableName, conn);
@@ -153,7 +142,6 @@ public class Mysql extends AbstractDatabaseConnection {
         String sql = "DESCRIBE "+tableName; 
         ResultSet rs = stmt.executeQuery(sql);
         List<Column> columns = new ArrayList<>();
-        System.out.println(sql);
         String primaryKey = null;
         Relationship relationship = getTableRelationship(tableName, conn);
         while(rs.next()) {
@@ -221,33 +209,58 @@ public class Mysql extends AbstractDatabaseConnection {
     @Override
     public void commit() {
         for(Action action: actions){
-
+            executeAction(action);
         }
     }
     private void executeAction(Action action) {
-        switch(action.getType()) {
-            case Action.INSERT:
-                break;
+        Connection conn = connection();
+        try {
+            switch(action.getType()) {
+                case Action.INSERT:
+                    executeInsert(action, conn);
+                    break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }    
-    private void executeInsert(Action action) {
+    private void executeInsert(Action action, Connection conn) throws SQLException {
         
         String sql = "INSERT INTO "+
               action.getTableName()+" "+
               "(`"+String.join("`,`", action.getData().getColumns())+"`) VALUES "+
-              "("+action.getData().ge+")";
+              "("+formatRowForInsert(action.getTableName(), action.getData())+")";
+        System.out.println(sql); 
+        Statement stmt =  conn.createStatement();
+        stmt.execute(sql);
     }
 
     private String formatRowForInsert(String tableName, Row row) {
         String str = "";
         Table table = getTable(tableName);
+        int count=0;
         for(Column column: table.getColumns()) {
-            str += getFormatValue();
+            count++;
+            if(count > 1) {
+                str+=",";
+            }
+            str += getFormatValue(column, row.getVal(column.getName()));
         }
         return str;
     }
     private String getFormatValue(Column column, String value) {
-
+        switch(column.getType()) {
+            case Column.NUMBER:
+                return value;
+            default:
+                return "'"+value+"'";
+        }
     }
 
     private Table getTable(String tableName) {

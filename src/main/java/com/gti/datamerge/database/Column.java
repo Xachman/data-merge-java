@@ -12,8 +12,8 @@ package com.gti.datamerge.database;
 public class Column {
 	private String name;	
     private int type;
-    final private static int NUMBER = 1;
-    final private static int STRING = 2;
+    public final static int NUMBER = 1;
+    public final static int STRING = 2;
 	private Relationship relationship;
 
 	public Column(String name) {
