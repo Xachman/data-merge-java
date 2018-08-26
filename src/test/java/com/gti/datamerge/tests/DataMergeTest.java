@@ -14,10 +14,14 @@ import com.gti.datamerge.DataMerge;
 import com.gti.datamerge.Database;
 import com.gti.datamerge.DatabaseConnection.Mysql;
 import com.gti.datamerge.DatabaseConnectionI;
+import com.gti.datamerge.mocks.DataYml;
+import com.gti.datamerge.mocks.TableDataYml;
 import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -25,19 +29,22 @@ import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import static org.junit.Assert.*;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  *
  * @author xach
  */
-public class DataMergeTest {
+public class DataMergeTest extends BaseClass {
 	private final String connectionUrl = "jdbc:mysql://192.168.99.100:4000?user=root&password=root";
-	private final String connectionUrlDB2 = "jdbc:mysql://192.168.99.100:4000/database2?user=root&password=root";
+	private final String connectionUrlDB1 = "jdbc:mysql://192.168.99.100:4000/database1?user=root&password=root";
 
 	public DataMergeTest() {
 	}
@@ -101,22 +108,51 @@ public class DataMergeTest {
         Database db1 = new Database(dbc1);
         Database db2 = new Database(dbc2);
 
+
         db1.mergeTable("users", db2);
 		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(connectionUrlDB2);
+			conn = DriverManager.getConnection(connectionUrlDB1);
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+            ResultSetMetaData user_md = rs.getMetaData();
 
-			rs.last();
-			int row = rs.getRow();
 
-			assertEquals(4, row);
+            InputStream actionsInput = new FileInputStream(new File(getResource("expect_users.yml")));
+            DataYml expect = new Yaml().loadAs(actionsInput, DataYml.class);
+            int count = 0;
 
-			
-			
+
+            while(rs.next()) {
+                Map<String,Object> tableData = expect.getTables().get(0).getData().get(count);
+                System.out.println("users");
+                for(int i = 1; i <= user_md.getColumnCount(); i++) {
+                    String columnName = user_md.getColumnName(i);
+                    System.out.println(tableData.get(columnName)+"="+rs.getString(columnName));
+                    assertEquals(tableData.get(columnName).toString(), rs.getString(columnName));
+                }
+                count++;
+                 
+            }
+
+			ResultSet rs_users_meta = stmt.executeQuery("SELECT * FROM users_meta");
+            ResultSetMetaData users_meta_md = rs_users_meta.getMetaData();
+		    count = 0;	
+            while(rs_users_meta.next()) {
+                Map<String,Object> tableData = expect.getTables().get(1).getData().get(count);
+                System.out.println("users_meta");
+                for(int i = 1; i <= users_meta_md.getColumnCount(); i++) {
+                    String columnName = users_meta_md.getColumnName(i);
+                    System.out.println(columnName);
+                    System.out.println(tableData.get(columnName)+"="+rs_users_meta.getString(columnName));
+                    assertEquals(tableData.get(columnName).toString(), rs_users_meta.getString(columnName));
+                }
+                count++;
+                 
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
+            fail("Something wrong");
 		} finally {
 			try {
 			

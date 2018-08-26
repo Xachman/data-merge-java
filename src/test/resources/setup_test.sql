@@ -30,18 +30,18 @@ CREATE TABLE IF NOT EXISTS `users_meta` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`user_id` int(11) NOT NULL,
 	`meta_key` varchar(255) COLLATE utf8_bin NOT NULL,
-	`value` varchar(255) COLLATE utf8_bin NOT NULL,
+	`meta_value` varchar(255) COLLATE utf8_bin NOT NULL,
 	PRIMARY KEY(`id`),
 	FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 
 
 
-INSERT INTO users (username, email) VALUES ('timtheone', 'tim@timetheone.com'),
+INSERT INTO users (username, email) VALUES ('timtheone', 'tim@timtheone.com'),
 ('sassysara', 'sara@gmail.com'),
 ('jason', 'jason@gmail.com');
 
-INSERT INTO users_meta (user_id, meta_key, value) VALUES (1, 'address', '123 tim lane'),
+INSERT INTO users_meta (user_id, meta_key, meta_value) VALUES (1, 'address', '123 tim lane'),
 (2, 'address', '567 main street'),
 (2, 'phone', '555-555-5556'),
 (3, 'address', '935 wall street'),
@@ -61,17 +61,17 @@ CREATE TABLE IF NOT EXISTS `users_meta` (
 	`id` int(11) NOT NULL AUTO_INCREMENT,
 	`user_id` int(11) NOT NULL,
 	`meta_key` varchar(255) COLLATE utf8_bin NOT NULL,
-	`value` varchar(255) COLLATE utf8_bin NOT NULL,
+	`meta_value` varchar(255) COLLATE utf8_bin NOT NULL,
 	PRIMARY KEY(`id`),
 	FOREIGN KEY (user_id) REFERENCES users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 
 
-INSERT INTO users (username, email) VALUES ('timtheone', 'tim@timetheone.com'),
-('john', 'john@gmail.com'),
-('sassysara', 'sara@gmail.com');
+INSERT INTO users (username, email) VALUES ('timtheone', 'tim@timtheone.com'),
+('sassysara', 'sara@gmail.com'),
+('john', 'john@gmail.com');
 
-INSERT INTO users_meta (user_id, meta_key, value) VALUES 
+INSERT INTO users_meta (user_id, meta_key, meta_value) VALUES 
 (1, 'address', '123 tim lane'),
 (2, 'address', '567 main street'),
 (3, 'address', '456 elm street'),

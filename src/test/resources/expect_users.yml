@@ -1,0 +1,47 @@
+## YAML Template.
+---
+tables:
+    - name: users
+      data:
+        - id: 1
+          username: timtheone
+          email: tim@timtheone.com
+        - id: 2
+          username: sassysara
+          email: sara@gmail.com
+        - id: 3
+          username: jason
+          email: jason@gmail.com
+        - id: 4
+          username: john
+          email: john@gmail.com
+    - name: users_meta
+      data:
+        - id: 1
+          user_id: 1
+          meta_key: address
+          meta_value: 123 tim lane
+        - id: 2
+          user_id: 2
+          meta_key: address
+          meta_value: 567 main street
+        - id: 3
+          user_id: 2
+          meta_key: phone
+          meta_value: 555-555-5556
+        - id: 4
+          user_id: 3
+          meta_key: address
+          meta_value: 935 wall street
+        - id: 5
+          user_id: 3
+          meta_key: phone
+          meta_value: 555-555-5589
+        - id: 6
+          user_id: 4
+          meta_key: address
+          meta_value: 456 elm street
+        - id: 7
+          user_id: 4
+          meta_key: phone
+          meta_value: 555-555-5550
