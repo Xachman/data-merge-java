@@ -231,28 +231,35 @@ public class Mysql extends AbstractDatabaseConnection {
         }
     }    
     private void executeInsert(Action action, Connection conn) throws SQLException {
-        
-        String sql = "INSERT INTO "+
-              action.getTableName()+" "+
-              "(`"+String.join("`,`", action.getData().getColumns())+"`) VALUES "+
-              "("+formatRowForInsert(action.getTableName(), action.getData())+")";
-        System.out.println(sql); 
+        StringBuilder sb = new StringBuilder();
+        sb.append("INSERT INTO ");
+        sb.append(action.getTableName());
+        sb.append(" ");
+        sb.append(formatRowForInsert(action.getTableName(), action.getData()));
+        System.out.println(sb.toString()); 
         Statement stmt =  conn.createStatement();
-        stmt.execute(sql);
+        stmt.execute(sb.toString());
     }
 
     private String formatRowForInsert(String tableName, Row row) {
-        String str = "";
+        StringBuilder columns =  new StringBuilder();
+        StringBuilder values = new StringBuilder();
+        columns.append("(");
+        values.append("(");
         Table table = getTable(tableName);
         int count=0;
         for(Column column: table.getColumns()) {
             count++;
             if(count > 1) {
-                str+=",";
+                values.append(",");
+                columns.append(",");
             }
-            str += getFormatValue(column, row.getVal(column.getName()));
+            values.append("'"+row.getVal(column.getName())+"'");
+            columns.append("`"+column.getName()+"`");
         }
-        return str;
+        columns.append(") VALUES ");
+        values.append(")");
+        return columns.toString()+values.toString();
     }
     private String getFormatValue(Column column, String value) {
         switch(column.getType()) {

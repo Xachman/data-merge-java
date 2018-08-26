@@ -102,9 +102,6 @@ public class Database {
 
     private void addAction(int type, final Row row, Table table, int increment) {
         Row newRow = new Row(row);
-        for(String column: row.getColumns()) {
-            newRow.put(column, row.getVal(column));
-        }
         if(table.hasPrimaryKey()) {
             newRow.put(table.getPrimaryKey(), Integer.toString(increment));
             actions.add(insertAction(newRow, table));

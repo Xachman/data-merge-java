@@ -59,6 +59,8 @@ public class Row {
         
         for(String column: getColumns())        {
             sb.append(" ");
+            sb.append(column);
+            sb.append("=");
             sb.append(getVal(column));
             sb.append(" ");
         }
