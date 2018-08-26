@@ -5,6 +5,7 @@
  */
 package com.gti.datamerge.tests;
 
+import com.gti.datamerge.DatamergeSuite;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.junit.runners.Suite;
  * @author xach
  */
 @RunWith(Suite.class)
+@Suite.SuiteClasses({com.gti.datamerge.tests.DataMergeTest.class})
 public class TestsSuite {
 
 	@BeforeClass

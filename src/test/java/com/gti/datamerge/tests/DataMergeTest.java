@@ -43,8 +43,8 @@ import org.yaml.snakeyaml.Yaml;
  * @author xach
  */
 public class DataMergeTest extends BaseClass {
-	private final String connectionUrl = "jdbc:mysql://192.168.99.100:4000?user=root&password=root";
-	private final String connectionUrlDB1 = "jdbc:mysql://192.168.99.100:4000/database1?user=root&password=root";
+	private final String connectionUrl = "jdbc:mysql://localhost:4000?user=root&password=root";
+	private final String connectionUrlDB1 = "jdbc:mysql://localhost:4000/database1?user=root&password=root";
 
 	public DataMergeTest() {
 	}
@@ -100,10 +100,10 @@ public class DataMergeTest extends BaseClass {
 	@Test
 	public void testDataMergeTable() {
 		// TODO review the generated test code and remove the default call to fail.
-        DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://192.168.99.100:4000/database1?user=root&password=root");
+        DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://localhost:4000/database1?user=root&password=root");
 
 
-        DatabaseConnectionI dbc2 = new Mysql("jdbc:mysql://192.168.99.100:4000/database2?user=root&password=root");
+        DatabaseConnectionI dbc2 = new Mysql("jdbc:mysql://localhost:4000/database2?user=root&password=root");
 
         Database db1 = new Database(dbc1);
         Database db2 = new Database(dbc2);

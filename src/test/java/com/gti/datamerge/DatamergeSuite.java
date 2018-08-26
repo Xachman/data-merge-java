@@ -17,6 +17,7 @@ import org.junit.runners.Suite;
  * @author xach
  */
 @RunWith(Suite.class)
+@Suite.SuiteClasses({com.gti.datamerge.tests.TestsSuite.class})
 public class DatamergeSuite {
 
 	@BeforeClass

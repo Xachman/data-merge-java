@@ -25,7 +25,7 @@ import org.junit.*;
  * @author Xachman
  */
 public class DatabaseConnectionMysqlTest {
-	private final String connectionUrl = "jdbc:mysql://192.168.99.100:4000?user=root&password=root";
+	private final String connectionUrl = "jdbc:mysql://localhost:4000?user=root&password=root";
 
 	@Before
 	public void setUp() {
@@ -63,7 +63,7 @@ public class DatabaseConnectionMysqlTest {
 
     @Test
     public void testTableOutput() {
-        String connectionUrl = "jdbc:mysql://192.168.99.100:4000/database1?user=root&password=root";
+        String connectionUrl = "jdbc:mysql://localhost:4000/database1?user=root&password=root";
         DatabaseConnectionI dbc = new Mysql(connectionUrl);
 
         List<Table> tables  = dbc.getAllTables();
