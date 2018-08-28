@@ -127,8 +127,6 @@ public class DatabaseTest {
 
 		InputStream actionsInput = new FileInputStream(new File(getResource("expect_actions_multiple_related.yml")));
 		ExpectActionsYml expectActions = new Yaml().loadAs(actionsInput, ExpectActionsYml.class);
-        int count = 0;
 		
-
 	}
 }

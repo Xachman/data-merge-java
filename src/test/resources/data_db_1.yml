@@ -103,16 +103,16 @@ tables:
     - name: category_v_posts
       data:
           - post_id: 1
-            catefory_id: 1
+            category_id: 1
           - post_id: 2
-            catefory_id: 2
+            category_id: 2
           - post_id: 3
-            catefory_id: 2
+            category_id: 2
           - post_id: 3
-            catefory_id: 3
+            category_id: 3
           - post_id: 4
-            catefory_id: 3
+            category_id: 3
           - post_id: 5
-            catefory_id: 1
+            category_id: 1
           - post_id: 6
-            catefory_id: 2
+            category_id: 2
