@@ -17,6 +17,7 @@ public class TableYml {
 	private List<String> columns;
 	private String primary_key;	
 	private Map<String, String> relation;
+    private List<Map<String, String>> relations;
 	public TableYml() {
 		
 	}

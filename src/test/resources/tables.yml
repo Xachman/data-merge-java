@@ -20,3 +20,28 @@ tables:
         - address
         - phone
       primary_key: id
+    - name: posts
+      columns:
+        - id
+        - post_author
+        - content
+      relation:
+          column: post_author
+          table: users
+          parent_column: id
+    - name: categories
+      columns:
+          - id
+          - name
+    - name: category_v_posts
+      columns:
+           - post_id
+           - category_id
+      relations:
+        - column: post_id
+          table: posts
+          parent_column: id
+        - column: category_id
+          table: categories 
+          parent_column: id
+

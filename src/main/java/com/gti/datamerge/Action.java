@@ -34,7 +34,16 @@ public class Action {
    
 	public String getTableName() {
 		return table;
-	}	
+	}
+
+    public String getTypeAsString() {
+        switch(getType()) {
+            case Action.INSERT:
+                return "insert";
+            default:
+                return "none";
+        }
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -47,5 +56,22 @@ public class Action {
            a.getType() == getType() &&
            a.getData().equals(getData())) return true;
         return false;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Table=");
+        sb.append(getTableName());
+        sb.append(" ");
+        sb.append("Type=");
+        sb.append(getTypeAsString());
+        sb.append(" ");
+        sb.append("Row=[ ");
+        sb.append(getData().toString());
+        sb.append(" ]");
+        
+        return sb.toString();
     }
 }

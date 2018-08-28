@@ -20,7 +20,14 @@ public class ExpectActionsYml {
     public List<ExpectActionYml> getActions() {
         return actions;
     }
-
+    public ExpectActionYml getTableActions(String tableName) {
+        for(ExpectActionYml e: actions) {
+            if(e.getTable().equals(tableName)) {
+                return e;
+            }
+        }
+        return null;
+    }
     public void setActions(List<ExpectActionYml> actions) {
         this.actions = actions;
     }

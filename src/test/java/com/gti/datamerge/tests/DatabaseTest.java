@@ -7,6 +7,7 @@ package com.gti.datamerge.tests;
 
 import com.gti.datamerge.Action;
 import com.gti.datamerge.Database;
+import com.gti.datamerge.mocks.ActionYml;
 import com.gti.datamerge.mocks.DataYml;
 import com.gti.datamerge.mocks.DatabaseConnection;
 import com.gti.datamerge.mocks.ExpectActionYml;
@@ -67,10 +68,19 @@ public class DatabaseTest {
 
 		InputStream actionsInput = new FileInputStream(new File(getResource("expect_actions.yml")));
 		ExpectActionsYml expectActions = new Yaml().loadAs(actionsInput, ExpectActionsYml.class);
-
         int count = 0;
-        for(ExpectActionYml eAction: expectActions.getActions()) {
-            Assert.assertEquals(eAction.getAction(), actions.get(count));
+		
+        ExpectActionYml eUsers = expectActions.getTableActions("users");
+
+		for(ActionYml action: eUsers.getActions()) {
+            Assert.assertEquals(action.getAction(), actions.get(count));
+            count++;
+        }        
+
+        ExpectActionYml eUsersMeta = expectActions.getTableActions("users_meta");
+
+		for(ActionYml action: eUsersMeta.getActions()) {
+            Assert.assertEquals(action.getAction(), actions.get(count));
             count++;
         }        
 

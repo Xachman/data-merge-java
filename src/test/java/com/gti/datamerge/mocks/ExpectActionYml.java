@@ -16,27 +16,9 @@ import java.util.Map;
  * @author Xachman
  */
 public class ExpectActionYml {
-    private String type;
     private String table;
-    private Map<String, String> row;    
-
-    public ExpectActionYml(String type, String table, Map<String, String> row) {
-        this.type = type;
-        this.table = table;
-        this.row = row;
-    }
-
-    public ExpectActionYml() {
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
+    private List<ActionYml> actions;
+    
     public String getTable() {
         return table;
     }
@@ -45,21 +27,12 @@ public class ExpectActionYml {
         this.table = table;
     }
 
-    public Map<String, String> getRow() {
-        return row;
+    public List<ActionYml> getActions() {
+        return actions;
     }
 
-    public void setRow(Map<String, String> row) {
-        this.row = row;
+    public void setActions(List<ActionYml> actions) {
+        this.actions = actions;
     }
 
-    public Action getAction() {
-        Row row = new Row();
-
-        for(String key: getRow().keySet()) {
-            row.put(key, getRow().get(key));
-        }
-        
-        return new Action(Action.INSERT, row, getTable());
-    }
 }
