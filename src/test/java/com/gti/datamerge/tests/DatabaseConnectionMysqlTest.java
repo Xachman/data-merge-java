@@ -11,7 +11,10 @@ import com.gti.datamerge.database.Table;
 import com.gti.datamerge.mocks.DatabaseConnection;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,18 +22,24 @@ import java.util.List;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.junit.Assert;
 import org.junit.*;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  *
  * @author Xachman
  */
-public class DatabaseConnectionMysqlTest {
-	private final String connectionUrl = "jdbc:mysql://localhost:4000?user=root&password=root";
+public class DatabaseConnectionMysqlTest extends BaseClass {
+	private String dbcHost;
+	private String connectionUrl = "";
 
 	@Before
-	public void setUp() {
-		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("setup_test.sql").getFile());
+	public void setUp() throws FileNotFoundException {
+		File file = new File(getResource("setup_test.sql"));
+		InputStream actionsInput = new FileInputStream(new File(getResource("config.yml")));
+		Config config = new Yaml().loadAs(actionsInput, Config.class);
+
+		dbcHost = config.getHost();
+		connectionUrl = "jdbc:mysql://"+dbcHost+":4000?user=root&password=root";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (Exception e) {
@@ -63,7 +72,7 @@ public class DatabaseConnectionMysqlTest {
 
     @Test
     public void testTableOutput() {
-        String connectionUrl = "jdbc:mysql://localhost:4000/database1?user=root&password=root";
+        String connectionUrl = "jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root";
         DatabaseConnectionI dbc = new Mysql(connectionUrl);
 
         List<Table> tables  = dbc.getAllTables();

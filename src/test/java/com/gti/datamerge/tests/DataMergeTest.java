@@ -20,6 +20,7 @@ import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.io.Reader;
@@ -43,9 +44,9 @@ import org.yaml.snakeyaml.Yaml;
  * @author xach
  */
 public class DataMergeTest extends BaseClass {
-	private final String connectionUrl = "jdbc:mysql://localhost:4000?user=root&password=root";
-	private final String connectionUrlDB1 = "jdbc:mysql://localhost:4000/database1?user=root&password=root";
-
+	private String connectionUrl = "";
+	private String connectionUrlDB1 = "";
+	private String dbcHost;
 	public DataMergeTest() {
 	}
 
@@ -58,7 +59,13 @@ public class DataMergeTest extends BaseClass {
 	}
 
 	@Before
-	public void setUp() {
+	public void setUp() throws FileNotFoundException {
+		InputStream actionsInput = new FileInputStream(new File(getResource("config.yml")));
+		Config config = new Yaml().loadAs(actionsInput, Config.class);
+
+		dbcHost = config.getHost();
+		connectionUrl = "jdbc:mysql://"+dbcHost+":4000?user=root&password=root";
+		connectionUrlDB1 = "jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root";
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("setup_test.sql").getFile());
 		try {
@@ -100,10 +107,10 @@ public class DataMergeTest extends BaseClass {
 	@Test
 	public void testDataMergeTable() {
 		// TODO review the generated test code and remove the default call to fail.
-        DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://localhost:4000/database1?user=root&password=root");
+        DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root");
 
 
-        DatabaseConnectionI dbc2 = new Mysql("jdbc:mysql://localhost:4000/database2?user=root&password=root");
+        DatabaseConnectionI dbc2 = new Mysql("jdbc:mysql://"+dbcHost+":4000/database2?user=root&password=root");
 
         Database db1 = new Database(dbc1);
         Database db2 = new Database(dbc2);

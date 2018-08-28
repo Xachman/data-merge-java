@@ -34,6 +34,7 @@ public class DatabaseTest {
 	private ClassLoader classLoader;
 	private DatabaseConnection dbc1;
 	private DatabaseConnection dbc2;
+	
 	private String getResource(String name) {
 		return classLoader.getResource(name).getFile();
 	}
