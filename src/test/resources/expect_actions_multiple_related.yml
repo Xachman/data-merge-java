@@ -1,0 +1,79 @@
+## YAML Template.
+---
+actions:
+    - table: users
+      actions: 
+        - type: insert
+          table: users
+          row:
+              id: 6
+              username: john
+              email: john@gmail.com
+              address: 118 Elizabeth St
+              phone: 5550987654
+        - type: insert
+          table: users
+          row: 
+              id: 7
+              username: erick
+              email: erick@gmail.com
+              address: 204 Wilson St
+              phone: 5558907654
+    - table: users_meta
+      actions:
+        - type: insert
+          table: users_meta
+          row:
+              id: 10
+              user_id: 6
+              meta_key: color
+              meta_value: black
+        - type: insert
+          table: users_meta
+          row:
+              id: 11
+              user_id: 7
+              meta_key: color
+              meta_value: blue
+        - type: insert
+          table: users_meta
+          row:
+              id: 12
+              user_id: 7
+              meta_key: food
+              meta_value: potato
+    - table: posts
+      actions:
+        - type: insert
+          table: posts
+          row:
+              id: 7
+              title: Title 5
+              content: All the content in context for Title 5
+              post_author: 6
+        - type: insert
+          table: posts
+          row:
+              id: 8
+              title: Title 6
+              content: All the content in context for Title 6
+              post_author: 7
+    - table: categories
+      actions:
+          - type: insert
+            table: catefory_v_posts
+            row:
+                id: 4
+                name: category 4
+    - table: category_v_posts
+      actions:
+          - type: insert
+            table: catefory_v_posts
+            row:
+                post_id: 7
+                category_id: 1
+          - type: insert
+            table: catefory_v_posts
+            row:
+                post_id: 8
+                category_id: 4

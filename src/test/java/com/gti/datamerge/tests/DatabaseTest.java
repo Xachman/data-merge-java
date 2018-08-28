@@ -86,4 +86,49 @@ public class DatabaseTest {
 
 	}
 	
+	@Test
+	public void testTableMergeWithMultipleRelated() throws FileNotFoundException, Exception {
+		Database db1 = new Database(dbc1);
+		Database db2 = new Database(dbc2);
+
+		List<Action> actions = db1.mergeTableActions("users",db2);
+
+		InputStream actionsInput = new FileInputStream(new File(getResource("expect_actions_multiple_related.yml")));
+		ExpectActionsYml expectActions = new Yaml().loadAs(actionsInput, ExpectActionsYml.class);
+        int count = 0;
+		
+        ExpectActionYml eUsers = expectActions.getTableActions("users");
+
+		for(ActionYml action: eUsers.getActions()) {
+            Assert.assertEquals(action.getAction(), actions.get(count));
+            count++;
+        }        
+
+        ExpectActionYml eUsersMeta = expectActions.getTableActions("users_meta");
+
+		for(ActionYml action: eUsersMeta.getActions()) {
+            Assert.assertEquals(action.getAction(), actions.get(count));
+            count++;
+        }        
+        ExpectActionYml posts = expectActions.getTableActions("posts");
+
+		for(ActionYml action: posts.getActions()) {
+            Assert.assertEquals(action.getAction(), actions.get(count));
+            count++;
+        }        
+
+	}
+	@Test
+	public void testTableMergeWithManyToMany() throws FileNotFoundException, Exception {
+		Database db1 = new Database(dbc1);
+		Database db2 = new Database(dbc2);
+
+		List<Action> actions = db1.mergeTableActions("users",db2);
+
+		InputStream actionsInput = new FileInputStream(new File(getResource("expect_actions_multiple_related.yml")));
+		ExpectActionsYml expectActions = new Yaml().loadAs(actionsInput, ExpectActionsYml.class);
+        int count = 0;
+		
+
+	}
 }

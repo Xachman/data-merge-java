@@ -62,3 +62,55 @@ tables:
           user_id: 5
           meta_key: food
           meta_value: potato
+    - name: posts
+      data:
+        - id: 1
+          title: Title 1
+          content: All the content in context for Title 1
+          post_author: 1
+        - id: 2
+          title: Title 2
+          content: All the content in context for Title 2
+          post_author: 1
+        - id: 3
+          title: Title 3
+          content: All the content in context for Title 3
+          post_author: 2
+        - id: 4
+          title: Title 4
+          content: All the content in context for Title 4
+          post_author: 3
+        - id: 5
+          title: Title 5
+          content: All the content in context for Title 5
+          post_author: 4
+        - id: 6
+          title: Title 6
+          content: All the content in context for Title 6
+          post_author: 5
+    - name: categories
+      data:
+          - id: 1
+            name: category 1
+          - id: 2
+            name: category 2
+          - id: 3
+            name: category 3
+          - id: 4
+            name: category 4
+    - name: category_v_posts
+      data:
+          - post_id: 1
+            category_id: 1
+          - post_id: 2
+            category_id: 2
+          - post_id: 3
+            category_id: 2
+          - post_id: 3
+            category_id: 3
+          - post_id: 4
+            category_id: 3
+          - post_id: 5
+            category_id: 1
+          - post_id: 6
+            category_id: 4

@@ -21,15 +21,18 @@ tables:
         - phone
       primary_key: id
     - name: posts
+      primary_key: id
       columns:
         - id
         - post_author
         - content
+        - title
       relation:
           column: post_author
           table: users
           parent_column: id
     - name: categories
+      primary_key: id
       columns:
           - id
           - name

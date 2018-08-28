@@ -132,10 +132,8 @@ public class DataMergeTest extends BaseClass {
 
             while(rs.next()) {
                 Map<String,Object> tableData = expect.getTables().get(0).getData().get(count);
-                System.out.println("users");
                 for(int i = 1; i <= user_md.getColumnCount(); i++) {
                     String columnName = user_md.getColumnName(i);
-                    System.out.println(tableData.get(columnName)+"="+rs.getString(columnName));
                     assertEquals(tableData.get(columnName).toString(), rs.getString(columnName));
                 }
                 count++;
@@ -147,11 +145,8 @@ public class DataMergeTest extends BaseClass {
 		    count = 0;	
             while(rs_users_meta.next()) {
                 Map<String,Object> tableData = expect.getTables().get(1).getData().get(count);
-                System.out.println("users_meta");
                 for(int i = 1; i <= users_meta_md.getColumnCount(); i++) {
                     String columnName = users_meta_md.getColumnName(i);
-                    System.out.println(columnName);
-                    System.out.println(tableData.get(columnName)+"="+rs_users_meta.getString(columnName));
                     assertEquals(tableData.get(columnName).toString(), rs_users_meta.getString(columnName));
                 }
                 count++;

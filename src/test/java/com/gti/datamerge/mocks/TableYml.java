@@ -59,4 +59,12 @@ public class TableYml {
 	public void setRelation(Map<String, String> relation) {
 		this.relation = relation;
 	}
+
+    public List<Map<String, String>> getRelations() {
+        return relations;
+    }
+
+    public void setRelations(List<Map<String, String>> relations) {
+        this.relations = relations;
+    }
 }

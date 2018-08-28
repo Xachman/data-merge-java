@@ -78,7 +78,6 @@ public class DatabaseConnectionMysqlTest extends BaseClass {
         List<Table> tables  = dbc.getAllTables();
         Table table = null;
         for(Table item: tables) {
-            System.out.println(item.getName());
             if(item.getName().equals("users_meta")) table = item;
         }
         

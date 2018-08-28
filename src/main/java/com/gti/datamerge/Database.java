@@ -75,7 +75,6 @@ public class Database {
 		List<Row> rows = db.getRows(tableName);
 		List<Row> dbRows = getRows(tableName);
         List<Row> addRows = new ArrayList<>();
-        System.out.println(rows);
         Table table = getTable(tableName);
         List<Table> relatedTables = dbc.getRelatedTables(table);
         Map<String, String> ids = new HashMap<>();
@@ -132,8 +131,8 @@ public class Database {
     private void addActionsForTable(Table table, Database db, List<Row> rows, Map<String,String> ids) {
         int increment = table.getIncrement();
         List<Row> dbRows = db.getRows(table.getName());
+        if(dbRows == null) return;
         for(Row row: rows) {
-
             for(Row dbRow: dbRows) {
                 if(dbRow.getVal(table.getRelationship().getColumn())
                         .equals(row.getVal(table.getRelationship().getParentColumn()))) {

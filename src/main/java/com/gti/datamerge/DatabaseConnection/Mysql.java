@@ -236,7 +236,6 @@ public class Mysql extends AbstractDatabaseConnection {
         sb.append(action.getTableName());
         sb.append(" ");
         sb.append(formatRowForInsert(action.getTableName(), action.getData()));
-        System.out.println(sb.toString()); 
         Statement stmt =  conn.createStatement();
         stmt.execute(sb.toString());
     }
