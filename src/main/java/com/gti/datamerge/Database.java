@@ -53,7 +53,7 @@ public class Database {
             List<Action> actions = mergeTableActions(name, db);
             dbc.setActions(actions);
             dbc.commit();
-        } catch (Exception ex) {
+        } catch (IllegalArgumentException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -61,17 +61,17 @@ public class Database {
 		return dbc.getAll(tableName);
 	}
 
-    private Table getTable(String tableName) throws Exception {
+    private Table getTable(String tableName) throws IllegalArgumentException {
         for(Table table: tables) {
             if(table.getName().equals(tableName))return table;
         } 
-        throw new Exception("Table not found");
+        throw new IllegalArgumentException("Table not found");
     }
             
 	private Action insertAction(Row row, Table table) {
 		return new Action(Action.INSERT, row,  table.getName());
 	}	
-    public List<Action> mergeTableActions(String tableName, Database db) throws Exception {
+    public List<Action> mergeTableActions(String tableName, Database db) throws IllegalArgumentException {
 		List<Row> rows = db.getRows(tableName);
 		List<Row> dbRows = getRows(tableName);
         List<Row> addRows = new ArrayList<>();

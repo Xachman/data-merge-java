@@ -5,6 +5,7 @@
  */
 package com.gti.datamerge.database;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ public class Table {
 	private String name;
     private String primaryKey;
     private int increment;
-    private Relationship relationship;
+    private List<Relationship> relationships = new ArrayList<>();
 	
 	public Table(String name, List<Column> cols) {
 		columns = cols;	
@@ -29,12 +30,12 @@ public class Table {
         this.primaryKey = pk;
         this.increment = increment;
 	}
-	public Table(String name, List<Column> cols, String pk, int increment, Relationship relationship) {
+	public Table(String name, List<Column> cols, String pk, int increment, List<Relationship> relationships) {
 		columns = cols;	
 		this.name = name;
         this.primaryKey = pk;
         this.increment = increment;
-        this.relationship = relationship;
+        this.relationships = relationships;
 	}
 	public String getName() {
 		return name;
@@ -53,18 +54,18 @@ public class Table {
     }
     
     public boolean hasRelationship() {
-        if(relationship != null) {
+        if(relationships.size() > 0) {
             return true;
         }
         return false;
     }
     public boolean hasRelationship(Table table) {
-        if(relationship == null) return false;
-        if(getRelationship().getTable().equals(table.getName())) return true;
+        if(relationships == null || relationships.size() == 0) return false;
+        if(getRelationship() != null && getRelationship().getTable().equals(table.getName())) return true;
         return false;
     }
     public Relationship getRelationship() {
-        return relationship;
+        return relationships.get(0);
     }
 
     public List<Column> getColumns() {

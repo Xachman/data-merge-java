@@ -144,6 +144,8 @@ public class Mysql extends AbstractDatabaseConnection {
         List<Column> columns = new ArrayList<>();
         String primaryKey = null;
         Relationship relationship = getTableRelationship(tableName, conn);
+        List<Relationship> relationships = new ArrayList<>();
+        relationships.add(relationship);
         while(rs.next()) {
             String name = rs.getString(1);
             String key = rs.getString(4);
@@ -153,7 +155,7 @@ public class Mysql extends AbstractDatabaseConnection {
             
             columns.add(new Column(name));
         }
-        return new Table(tableName, columns, primaryKey,  getTableIncrement(tableName, conn)-1, relationship);
+        return new Table(tableName, columns, primaryKey,  getTableIncrement(tableName, conn)-1, relationships);
     }
 
     private Relationship getTableRelationship(String tableName, Connection conn) throws SQLException {

@@ -85,7 +85,7 @@ public class DataMergeTest extends BaseClass {
 			sr.runScript(reader);
 			
 			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -105,7 +105,7 @@ public class DataMergeTest extends BaseClass {
 	}
 
 	@Test
-	public void testDataMergeTable() {
+	public void testDataMergeTable() throws FileNotFoundException {
 		// TODO review the generated test code and remove the default call to fail.
         DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root");
 
@@ -152,7 +152,7 @@ public class DataMergeTest extends BaseClass {
                 count++;
                  
             }
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
             fail("Something wrong");
 		} finally {

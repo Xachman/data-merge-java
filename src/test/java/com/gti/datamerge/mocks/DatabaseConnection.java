@@ -53,11 +53,16 @@ public class DatabaseConnection extends AbstractDatabaseConnection {
                 }
             }
 
-            Relationship relationship = null;
+            List<Relationship> relationships = new ArrayList<>();
             if(table.getRelation() != null && table.getRelation().size() > 0) {
-                relationship = new Relationship(table.getRelation().get("table"), table.getRelation().get("column"), table.getRelation().get("parent_column"));
+                relationships.add(new Relationship(table.getRelation().get("table"), table.getRelation().get("column"), table.getRelation().get("parent_column")));
             }
-			tables.add(new Table(table.getName(), cols, table.getPrimary_key(), newInc, relationship));
+            if(table.getRelations().size() > 0) {
+                for(Map<String, String> map: table.getRelations()) {
+                    relationships.add(new Relationship(map.get("table"), map.get("column"), map.get("parent_column")));
+                }
+            } 
+			tables.add(new Table(table.getName(), cols, table.getPrimary_key(), newInc, relationships));
 		}
 	}
 	public void setData(List<TableDataYml> data) {
