@@ -10,31 +10,25 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import com.gti.datamerge.DataMerge;
 import com.gti.datamerge.Database;
 import com.gti.datamerge.DatabaseConnection.Mysql;
 import com.gti.datamerge.DatabaseConnectionI;
 import com.gti.datamerge.mocks.DataYml;
-import com.gti.datamerge.mocks.TableDataYml;
-import java.awt.List;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Map;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import static org.junit.Assert.*;
 import org.yaml.snakeyaml.Yaml;
@@ -59,7 +53,7 @@ public class DataMergeTest extends BaseClass {
 	}
 
 	@Before
-	public void setUp() throws FileNotFoundException {
+	public void setUp() throws FileNotFoundException, IOException {
 		InputStream actionsInput = new FileInputStream(new File(getResource("config.yml")));
 		Config config = new Yaml().loadAs(actionsInput, Config.class);
 
@@ -67,7 +61,6 @@ public class DataMergeTest extends BaseClass {
 		connectionUrl = "jdbc:mysql://"+dbcHost+":4000?user=root&password=root";
 		connectionUrlDB1 = "jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root";
 		ClassLoader classLoader = getClass().getClassLoader();
-		File file = new File(classLoader.getResource("setup_test.sql").getFile());
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (Exception e) {
@@ -79,8 +72,9 @@ public class DataMergeTest extends BaseClass {
 			conn = DriverManager.getConnection(connectionUrl);
 
 			ScriptRunner sr = new ScriptRunner(conn);
+            sr.setLogWriter(null);
 
-			Reader reader = new BufferedReader(new FileReader(file.getPath()));
+			Reader reader = Resources.getResourceAsReader("setup_test.sql");
 
 			sr.runScript(reader);
 			

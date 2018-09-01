@@ -14,11 +14,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
+import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.junit.Assert;
 import org.junit.*;
@@ -33,8 +36,7 @@ public class DatabaseConnectionMysqlTest extends BaseClass {
 	private String connectionUrl = "";
 
 	@Before
-	public void setUp() throws FileNotFoundException {
-		File file = new File(getResource("setup_test.sql"));
+	public void setUp() throws FileNotFoundException, IOException {
 		InputStream actionsInput = new FileInputStream(new File(getResource("config.yml")));
 		Config config = new Yaml().loadAs(actionsInput, Config.class);
 
@@ -51,13 +53,15 @@ public class DatabaseConnectionMysqlTest extends BaseClass {
 			conn = DriverManager.getConnection(connectionUrl);
 
 			ScriptRunner sr = new ScriptRunner(conn);
+            sr.setLogWriter(null);
 
-			Reader reader = new BufferedReader(new FileReader(file.getPath()));
+			Reader reader = Resources.getResourceAsReader("setup_test.sql");
 
+        
 			sr.runScript(reader);
 			
 			
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
