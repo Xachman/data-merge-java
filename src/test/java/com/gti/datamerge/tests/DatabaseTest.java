@@ -128,8 +128,8 @@ public class DatabaseTest {
 		InputStream actionsInput = new FileInputStream(new File(getResource("expect_actions_multiple_related.yml")));
 		ExpectActionsYml expectActions = new Yaml().loadAs(actionsInput, ExpectActionsYml.class);
 
-        int cat = compareActions(expectActions, actions, "category");
-        int cat_v_posts = compareActions(expectActions, actions, "category_v_posts");
+        int cat = compareActions(expectActions, actions, "categories");
+        int cat_v_posts = compareActions(expectActions, actions, "categories_v_posts");
         
         Assert.assertTrue(cat < cat_v_posts);
 	}

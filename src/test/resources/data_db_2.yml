@@ -98,7 +98,7 @@ tables:
             name: category 3
           - id: 4
             name: category 4
-    - name: category_v_posts
+    - name: categories_v_posts
       data:
           - post_id: 1
             category_id: 1

@@ -100,7 +100,7 @@ tables:
             name: category 2
           - id: 3
             name: category 3
-    - name: category_v_posts
+    - name: categories_v_posts
       data:
           - post_id: 1
             category_id: 1
