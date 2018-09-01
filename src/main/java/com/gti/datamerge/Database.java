@@ -31,23 +31,11 @@ public class Database {
 	}
 
 	public void merge(Database database) {
-	    List<Table> baseTables = getBaseTables();
-
         for(Table table: tables) {
             mergeTable(table.getName(), database);
         }
 	}
-    private List<Table> getBaseTables() {
-        List<Table> tables = new ArrayList<>();
-        List<Table> allTables = dbc.getAllTables();
-
-        for(Table table: allTables){
-            if(!table.hasRelationship()) {
-                tables.add(table);
-            }
-        }
-        return tables;
-    }
+    
     public void mergeTable(String name, Database db) {
         try {
             List<Action> actions = mergeTableActions(name, db);
