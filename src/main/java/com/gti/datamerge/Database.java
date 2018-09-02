@@ -61,30 +61,10 @@ public class Database {
 		return new Action(Action.INSERT, row,  table.getName());
 	}	
     public List<Action> mergeTableActions(String tableName, Database db) throws IllegalArgumentException {
-		List<Row> rows = db.getRows(tableName);
-		List<Row> dbRows = getRows(tableName);
-        List<Row> addRows = new ArrayList<>();
         Table table = getTable(tableName);
-        List<Table> relatedTables = dbc.getRelatedTables(table);
-        Map<String, String> ids = new HashMap<>();
-        int increment = table.getIncrement();
 
-
-        for(Row row: rows) {
-            if(!isRowInRows(row, dbRows)){
-                increment++;
-                addAction(Action.INSERT, row, table, increment);
-                addRows.add(row);
-                ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
-            }
-        }
-        
-
-        if(relatedTables.size() > 0) {
-            for(Table rTable: relatedTables) {
-                addActionsForTable(rTable, db, addRows, ids);
-            }
-        }
+        getActions(table, db);
+        getRelationshipActions(table, db);
 		return actions;	
     }
 
@@ -159,7 +139,6 @@ public class Database {
     private void getActions(Table table, Database db) {
 		List<Row> rows = db.getRows(table.getName());
 		List<Row> dbRows = getRows(table.getName());
-        List<Row> addRows = new ArrayList<>();
         Map<String, String> ids = new HashMap<>();
         int increment = table.getIncrement();
 
@@ -168,7 +147,6 @@ public class Database {
             if(!isRowInRows(row, dbRows)){
                 increment++;
                 addAction(Action.INSERT, row, table, increment);
-                addRows.add(row);
                 ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
             }
         }

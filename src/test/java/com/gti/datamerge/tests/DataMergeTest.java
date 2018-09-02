@@ -110,7 +110,7 @@ public class DataMergeTest extends BaseClass {
         Database db2 = new Database(dbc2);
 
 
-        db1.mergeTable("users", db2);
+        db1.merge(db2);
 		Connection conn = null;
 		try {
 			conn = DriverManager.getConnection(connectionUrlDB1);
@@ -138,10 +138,12 @@ public class DataMergeTest extends BaseClass {
             ResultSetMetaData users_meta_md = rs_users_meta.getMetaData();
 		    count = 0;	
             while(rs_users_meta.next()) {
-                Map<String,Object> tableData = expect.getTables().get(1).getData().get(count);
+                System.out.println(count);
                 for(int i = 1; i <= users_meta_md.getColumnCount(); i++) {
                     String columnName = users_meta_md.getColumnName(i);
-                    assertEquals(tableData.get(columnName).toString(), rs_users_meta.getString(columnName));
+                    String result = rs_users_meta.getString(columnName);
+                    Map<String,Object> tableData = expect.getTables().get(1).getData().get(count);
+                    assertEquals(tableData.get(columnName).toString(), result);
                 }
                 count++;
                  
