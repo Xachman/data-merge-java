@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  *
@@ -119,6 +120,8 @@ public class Database {
     private void addActionsForTable(Table table, Database db, List<Row> rows, Map<String,String> ids) {
         int increment = table.getIncrement();
         List<Row> dbRows = db.getRows(table.getName());
+        List<Row> collection = new ArrayList<>();
+        Map<String, String> newIds = new HashMap<>();
         if(dbRows == null) return;
         for(Row row: rows) {
             for(Row dbRow: dbRows) {
@@ -128,11 +131,86 @@ public class Database {
                     
                     newRow.put(table.getPrimaryKey(),Integer.toString(increment));
                     newRow.put(table.getRelationship().getColumn(), ids.get(row.getVal(table.getRelationship().getParentColumn())));
+                    collection.add(dbRow);
+                    newIds.put(dbRow.getVal(table.getPrimaryKey()), Integer.toString(increment));
+
                     increment++;
                     addAction(Action.INSERT, newRow, table, increment);
                 }
             }
         }
+        for(Table rTable: dbc.getRelatedTables(table)) {
+            addActionsForTable(rTable, db, collection, newIds);
+        }
+    }
+
+    public List<Action> mergeTablesActions(Database db2) {
+        List<Table> bTables = getBaseTables();
+        
+        for(Table table: bTables) {
+           getActions(table, db2);
+        }
+        for(Table table: bTables) {
+            getRelationshipActions(table, db2);
+        }
+        return actions;
+    }
+
+    private void getActions(Table table, Database db) {
+		List<Row> rows = db.getRows(table.getName());
+		List<Row> dbRows = getRows(table.getName());
+        List<Row> addRows = new ArrayList<>();
+        Map<String, String> ids = new HashMap<>();
+        int increment = table.getIncrement();
+
+
+        for(Row row: rows) {
+            if(!isRowInRows(row, dbRows)){
+                increment++;
+                addAction(Action.INSERT, row, table, increment);
+                addRows.add(row);
+                ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
+            }
+        }
+
+    }
+
+    private void getRelationshipActions(Table table, Database db) {
+		List<Row> rows = db.getRows(table.getName());
+		List<Row> dbRows = getRows(table.getName());
+        List<Row> addRows = new ArrayList<>();
+        List<Table> relatedTables = dbc.getRelatedTables(table);
+        Map<String, String> ids = new HashMap<>();
+        int increment = table.getIncrement();
+
+
+        for(Row row: rows) {
+            if(!isRowInRows(row, dbRows)){
+                increment++;
+                addRows.add(row);
+                ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
+            }
+        }
+        
+
+        if(relatedTables.size() > 0) {
+            for(Table rTable: relatedTables) {
+                addActionsForTable(rTable, db, addRows, ids);
+            }
+        }
+    }
+
+    private List<Table> getBaseTables() {
+        List<Table> bTables = new ArrayList<>();
+        List<Table> tables = dbc.getAllTables();
+
+        for(Table table: tables) {
+            if(!table.hasRelationship()) {
+                bTables.add(table);
+            }
+        }
+        
+        return tables;
     }
 }
 

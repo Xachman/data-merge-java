@@ -61,19 +61,19 @@ actions:
     - table: categories
       actions:
           - type: insert
-            table: catefory_v_posts
+            table: categories
             row:
                 id: 4
                 name: category 4
-    - table: category_v_posts
+    - table: categories_v_posts
       actions:
           - type: insert
-            table: catefory_v_posts
+            table: categories_v_posts
             row:
                 post_id: 7
                 category_id: 1
           - type: insert
-            table: catefory_v_posts
+            table: categories_v_posts
             row:
                 post_id: 8
                 category_id: 4

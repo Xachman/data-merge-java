@@ -36,7 +36,7 @@ tables:
       columns:
           - id
           - name
-    - name: category_v_posts
+    - name: categories_v_posts
       columns:
            - post_id
            - category_id

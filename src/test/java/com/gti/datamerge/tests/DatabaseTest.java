@@ -123,12 +123,15 @@ public class DatabaseTest {
 		Database db1 = new Database(dbc1);
 		Database db2 = new Database(dbc2);
 
-		List<Action> actions = db1.mergeTableActions("users",db2);
+        List<Action> actions = db1.mergeTablesActions(db2);
 
 		InputStream actionsInput = new FileInputStream(new File(getResource("expect_actions_multiple_related.yml")));
 		ExpectActionsYml expectActions = new Yaml().loadAs(actionsInput, ExpectActionsYml.class);
 
+        System.out.println(actions);
+        System.out.println("categories");
         int cat = compareActions(expectActions, actions, "categories");
+        System.out.println("categories_v_posts");
         int cat_v_posts = compareActions(expectActions, actions, "categories_v_posts");
         
         Assert.assertTrue(cat < cat_v_posts);
@@ -148,7 +151,9 @@ public class DatabaseTest {
         }
         int count = 0;
         for(ActionYml action: eAction.getActions()) {
-            Assert.assertEquals(action.getAction(), actions.get(count));
+            System.out.println(action.getAction());
+            System.out.println(listActions.get(count));
+            Assert.assertEquals(action.getAction(), listActions.get(count));
             count++;
         }
         return result; 

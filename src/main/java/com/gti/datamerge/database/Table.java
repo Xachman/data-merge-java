@@ -18,7 +18,7 @@ public class Table {
     private String primaryKey;
     private int increment;
     private List<Relationship> relationships = new ArrayList<>();
-	
+
 	public Table(String name, List<Column> cols) {
 		columns = cols;	
 		this.name = name;
@@ -71,4 +71,9 @@ public class Table {
     public List<Column> getColumns() {
         return columns;
     }
+    
+    public List<Relationship> getRelationships() {
+        return relationships;
+    }
+	
 }
