@@ -70,10 +70,5 @@ actions:
           - type: insert
             table: categories_v_posts
             row:
-                post_id: 7
-                category_id: 1
-          - type: insert
-            table: categories_v_posts
-            row:
-                post_id: 8
+                post_id: 6
                 category_id: 4
