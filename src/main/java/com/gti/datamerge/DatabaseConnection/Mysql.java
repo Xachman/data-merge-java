@@ -145,7 +145,9 @@ public class Mysql extends AbstractDatabaseConnection {
         String primaryKey = null;
         Relationship relationship = getTableRelationship(tableName, conn);
         List<Relationship> relationships = new ArrayList<>();
-        relationships.add(relationship);
+        if(relationship != null) {
+            relationships.add(relationship);
+        }
         while(rs.next()) {
             String name = rs.getString(1);
             String key = rs.getString(4);
