@@ -1,4 +1,7 @@
-
+gradle/
+gradlew*
+.idea/
+.nb-gradle-properties
 build/
 .nb-gradle/
 .gradle/
