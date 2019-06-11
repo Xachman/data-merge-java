@@ -51,14 +51,18 @@ tables:
           meta_key: food
           meta_value: pizza
         - id: 6
+          user_id: 3
+          meta_key: color
+          meta_value: brown
+        - id: 7
           user_id: 4
           meta_key: color
           meta_value: black
-        - id: 7
+        - id: 8
           user_id: 5
           meta_key: color
           meta_value: blue
-        - id: 8
+        - id: 9
           user_id: 5
           meta_key: food
           meta_value: potato

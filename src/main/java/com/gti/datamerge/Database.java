@@ -33,8 +33,8 @@ public class Database {
 
 	public void merge(Database database) {
         for(Table table: tables) {
-            if(table.hasRelationship())
-                mergeTable(table.getName(), database);
+        //    if(!table.hasRelationship())
+            mergeTable(table.getName(), database);
         }
 	}
     
