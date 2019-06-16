@@ -127,8 +127,10 @@ public class DataMergeTest extends BaseClass {
             while(rs.next()) {
                 Map<String,Object> tableData = expect.getTables().get(0).getData().get(count);
                 for(int i = 1; i <= user_md.getColumnCount(); i++) {
-                    String columnName = user_md.getColumnName(i);
-                    assertEquals(tableData.get(columnName).toString(), rs.getString(columnName));
+					String columnName = user_md.getColumnName(i);
+					String expectStr =  tableData.get(columnName).toString();
+					String assertStr = rs.getString(columnName);
+                    assertEquals(expectStr, assertStr);
                 }
                 count++;
                  

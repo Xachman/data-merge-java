@@ -27,7 +27,7 @@ actions:
             id: 10
             user_id: 3
             meta_key: color
-            meta_value: brownk
+            meta_value: brown
         - type: insert
           table: users_meta
           row:

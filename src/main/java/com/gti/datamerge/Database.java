@@ -24,7 +24,6 @@ import org.apache.commons.lang.ArrayUtils;
 public class Database {
 	private List<Table> tables;
 	private DatabaseConnectionI dbc;
-    private List<Action> actions = new ArrayList<>();
 
 	public Database(DatabaseConnectionI dbc) {
 		this.dbc = dbc;
@@ -64,18 +63,22 @@ public class Database {
     public List<Action> mergeTableActions(String tableName, Database db) throws IllegalArgumentException {
         Table table = getTable(tableName);
 
-        getActions(table, db);
-        getRelationshipActions(table, db);
-		return actions;	
+        List<Action> actions = new ArrayList<>();
+        actions.addAll(getActions(table, db));
+        List<Table> relatedTables = dbc.getRelatedTables(table);
+        for(Table rTable : relatedTables) {
+            actions.addAll(getRelationshipActions(table, db, getActions(rTable, db)));
+        }
+		return actions;
     }
 
-    private void addAction(int type, final Row row, Table table, int increment) {
+    private Action addAction(int type, final Row row, Table table, int increment) {
         Row newRow = new Row(row);
         if(table.hasPrimaryKey()) {
             newRow.put(table.getPrimaryKey(), Integer.toString(increment));
-            actions.add(insertAction(newRow, table));
+            return insertAction(newRow, table);
         }else{
-            actions.add(insertAction(newRow, table));
+            return insertAction(newRow, table);
         }
     }
 
@@ -98,27 +101,27 @@ public class Database {
         return false;
     } 
 
-    private void addActionsForTable(Table table, Database db, List<Row> rows, Map<String,String> ids) {
+    private void addActionsForTable(Table table, Database db, List<Action> actions, Map<String,String> ids) {
         int increment = table.getIncrement();
         List<Row> dbRows = db.getRows(table.getName());
         List<Row> collection = new ArrayList<>();
         Map<String, String> newIds = new HashMap<>();
         if(dbRows == null) return;
-        for(Row row: rows) {
-            for(Row dbRow: dbRows) {
-                if(dbRow.getVal(table.getRelationship().getColumn())
-                        .equals(row.getVal(table.getRelationship().getParentColumn()))) {
-                    Row newRow = new Row(dbRow);  
-                    
-                    newRow.put(table.getPrimaryKey(),Integer.toString(increment));
-                    newRow.put(table.getRelationship().getColumn(), ids.get(row.getVal(table.getRelationship().getParentColumn())));
-                    collection.add(dbRow);
-                    newIds.put(dbRow.getVal(table.getPrimaryKey()), Integer.toString(increment));
-
-                    increment++;
-                    addAction(Action.INSERT, newRow, table, increment);
-                }
-            }
+        for(Action action: actions) {
+//            for(Row dbRow: dbRows) {
+//                if(dbRow.getVal(table.getRelationship().getColumn())
+//                        .equals(row.getVal(table.getRelationship().getParentColumn()))) {
+//                    Row newRow = new Row(dbRow);
+//
+//                    newRow.put(table.getPrimaryKey(),Integer.toString(increment));
+//                    newRow.put(table.getRelationship().getColumn(), ids.get(row.getVal(table.getRelationship().getParentColumn())));
+//                    collection.add(dbRow);
+//                    newIds.put(dbRow.getVal(table.getPrimaryKey()), Integer.toString(increment));
+//
+//                    increment++;
+//                    addAction(Action.INSERT, newRow, table, increment);
+//                }
+//            }
         }
         for(Table rTable: dbc.getRelatedTables(table)) {
             addActionsForTable(rTable, db, collection, newIds);
@@ -127,34 +130,36 @@ public class Database {
 
     public List<Action> mergeTablesActions(Database db2) {
         List<Table> bTables = getBaseTables();
-        
+        List<Action> actions = new ArrayList<>();
         for(Table table: bTables) {
-           getActions(table, db2);
+           actions.addAll(getActions(table, db2));
         }
         for(Table table: bTables) {
-            getRelationshipActions(table, db2);
+            actions.addAll(getRelationshipActions(table, db2, getActions(table, db2)));
         }
         return actions;
     }
 
-    private void getActions(Table table, Database db) {
+    private List<Action> getActions(Table table, Database db) {
 		List<Row> rows = db.getRows(table.getName());
 		List<Row> dbRows = getRows(table.getName());
         Map<String, String> ids = new HashMap<>();
+        List<Action> actions = new ArrayList<>();
         int increment = table.getIncrement();
 
 
         for(Row row: rows) {
             if(!isRowInRows(row, dbRows)){
                 increment++;
-                addAction(Action.INSERT, row, table, increment);
+                actions.add(addAction(Action.INSERT, row, table, increment));
                 ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
             }
         }
+        return actions;
 
     }
 
-    private void getRelationshipActions(Table table, Database db) {
+    private List<Action> getRelationshipActions(Table table, Database db, List<Action> actions) {
 		List<Row> rows = db.getRows(table.getName());
 		List<Row> dbRows = getRows(table.getName());
         List<Row> addRows = new ArrayList<>();
@@ -170,11 +175,13 @@ public class Database {
                 ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
             }
         }
+
+
         
 
         if(relatedTables.size() > 0) {
             for(Table rTable: relatedTables) {
-                addActionsForTable(rTable, db, addRows, ids);
+                addActionsForTable(rTable, db, actions, ids);
             }
         }
     }

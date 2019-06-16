@@ -6,3 +6,5 @@ build/
 .nb-gradle/
 .gradle/
 src/test/resources/config.yml
+bin/
+out/
