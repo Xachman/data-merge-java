@@ -21,6 +21,13 @@ actions:
               phone: 5558907654
     - table: users_meta
       actions:
+        - type: update
+          table: users_meta
+          row:
+            id: 6
+            user_id: 3
+            meta_key: color
+            meta_value: brown
         - type: insert
           table: users_meta
           row:

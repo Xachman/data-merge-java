@@ -48,7 +48,12 @@ public class ActionYml {
         for(String key: getRow().keySet()) {
             row.put(key, getRow().get(key));
         }
-        
-        return new Action(Action.INSERT, row, getTable());        
+        if(type.equals("insert")) {
+            return new Action(Action.INSERT, row, getTable());
+        }
+        if(type.equals("update")) {
+            return new Action(Action.UPDATE, row, getTable());
+        }
+        return new Action(Action.INSERT, row, getTable());
     }
 }

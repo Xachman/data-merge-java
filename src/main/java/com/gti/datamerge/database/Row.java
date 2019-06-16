@@ -67,4 +67,8 @@ public class Row {
 
         return sb.toString();
     }
+
+    public void setVal(String column, String value) {
+        entries.put(column, value);
+    }
 }

@@ -17,6 +17,7 @@ public class Action {
 	private Row data;
 	private String table;
 	public static final int INSERT = 1;
+    public static final int UPDATE = 2;
 
 	public Action(int type, Row data, String table) {
 		this.type = type;
@@ -40,6 +41,8 @@ public class Action {
         switch(getType()) {
             case Action.INSERT:
                 return "insert";
+            case Action.UPDATE:
+                return "update";
             default:
                 return "none";
         }

@@ -67,7 +67,7 @@ public class Database {
         actions.addAll(getActions(table, db));
         List<Table> relatedTables = dbc.getRelatedTables(table);
         for(Table rTable : relatedTables) {
-            actions.addAll(getRelationshipActions(table, db, getActions(rTable, db)));
+            actions.addAll(getRelationshipActions(table, rTable, db, getActions(rTable, db)));
         }
 		return actions;
     }
@@ -101,13 +101,13 @@ public class Database {
         return false;
     } 
 
-    private void addActionsForTable(Table table, Database db, List<Action> actions, Map<String,String> ids) {
-        int increment = table.getIncrement();
-        List<Row> dbRows = db.getRows(table.getName());
-        List<Row> collection = new ArrayList<>();
-        Map<String, String> newIds = new HashMap<>();
-        if(dbRows == null) return;
+    private List<Action> addActionsForTable(Table table, List<Action> actions, Map<String,String> ids) {
         for(Action action: actions) {
+            for(Map.Entry<String, String> entry: ids.entrySet()) {
+                if(action.getData().getVal(table.getRelationship().getColumn()).equals(entry.getKey())) {
+                    action.getData().setVal(table.getRelationship().getColumn(), entry.getValue());
+                }
+            }
 //            for(Row dbRow: dbRows) {
 //                if(dbRow.getVal(table.getRelationship().getColumn())
 //                        .equals(row.getVal(table.getRelationship().getParentColumn()))) {
@@ -123,9 +123,10 @@ public class Database {
 //                }
 //            }
         }
-        for(Table rTable: dbc.getRelatedTables(table)) {
-            addActionsForTable(rTable, db, collection, newIds);
-        }
+//        for(Table rTable: dbc.getRelatedTables(table)) {
+//            addActionsForTable(rTable, db, collection, newIds);
+//        }
+        return actions;
     }
 
     public List<Action> mergeTablesActions(Database db2) {
@@ -135,7 +136,7 @@ public class Database {
            actions.addAll(getActions(table, db2));
         }
         for(Table table: bTables) {
-            actions.addAll(getRelationshipActions(table, db2, getActions(table, db2)));
+//            actions.addAll(getRelationshipActions(table, db2, getActions(table, db2)));
         }
         return actions;
     }
@@ -159,7 +160,7 @@ public class Database {
 
     }
 
-    private List<Action> getRelationshipActions(Table table, Database db, List<Action> actions) {
+    private List<Action> getRelationshipActions(Table table, Table rTable, Database db, List<Action> actions) {
 		List<Row> rows = db.getRows(table.getName());
 		List<Row> dbRows = getRows(table.getName());
         List<Row> addRows = new ArrayList<>();
@@ -177,13 +178,8 @@ public class Database {
         }
 
 
-        
+        return addActionsForTable(rTable, actions, ids);
 
-        if(relatedTables.size() > 0) {
-            for(Table rTable: relatedTables) {
-                addActionsForTable(rTable, db, actions, ids);
-            }
-        }
     }
 
     private List<Table> getBaseTables() {
