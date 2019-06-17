@@ -57,9 +57,6 @@ public class Database {
         throw new IllegalArgumentException("Table not found");
     }
             
-	private Action insertAction(Row row, Table table) {
-		return new Action(Action.INSERT, row,  table.getName());
-	}	
     public List<Action> mergeTableActions(String tableName, Database db) throws IllegalArgumentException {
         Table table = getTable(tableName);
 
@@ -74,12 +71,10 @@ public class Database {
 
     private Action addAction(int type, final Row row, Table table, int increment) {
         Row newRow = new Row(row);
-        if(table.hasPrimaryKey()) {
+        if(table.hasPrimaryKey() && increment > 0) {
             newRow.put(table.getPrimaryKey(), Integer.toString(increment));
-            return insertAction(newRow, table);
-        }else{
-            return insertAction(newRow, table);
         }
+        return new Action(type, newRow,  table.getName());
     }
 
     private boolean isRowInRows(Row row, List<Row> rows) {
@@ -142,29 +137,40 @@ public class Database {
     }
 
     private List<Action> getActions(Table table, Database db) {
-		List<Row> rows = db.getRows(table.getName());
-		List<Row> dbRows = getRows(table.getName());
+		List<Row> mergeRows = db.getRows(table.getName());
+		List<Row> rows = getRows(table.getName());
         Map<String, String> ids = new HashMap<>();
         List<Action> actions = new ArrayList<>();
         int increment = table.getIncrement();
 
 
-        for(Row row: rows) {
-            if(!isRowInRows(row, dbRows)){
+        for(Row row: mergeRows) {
+            if(!isRowInRows(row, rows)){
                 increment++;
-                actions.add(addAction(Action.INSERT, row, table, increment));
                 ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
+                actions.add(addAction(Action.INSERT, row, table, increment));
             }
         }
         return actions;
 
     }
-
+    private boolean needsUpdate(Table table, Row row, List<Row> rows) {
+        for(Row cRow: rows) {
+           if(table.hasRelationship()) {
+               String pc = table.getRelationship().getParentColumn();
+               String pk = table.getPrimaryKey();
+               if(row.getVal(pc).equals(cRow.getVal(pc)) && row.getVal(pk).equals(cRow.getVal(pk))) {
+                   return true;
+               }
+           }
+        }
+	    return false;
+    }
     private List<Action> getRelationshipActions(Table table, Table rTable, Database db, List<Action> actions) {
 		List<Row> rows = db.getRows(table.getName());
 		List<Row> dbRows = getRows(table.getName());
         List<Row> addRows = new ArrayList<>();
-        List<Table> relatedTables = dbc.getRelatedTables(table);
+//        List<Table> relatedTables = dbc.getRelatedTables(table);
         Map<String, String> ids = new HashMap<>();
         int increment = table.getIncrement();
 
