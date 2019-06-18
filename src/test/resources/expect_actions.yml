@@ -42,17 +42,17 @@ actions:
               user_id: 7
               meta_key: color
               meta_value: blue
-        - type: update
+        - type: insert
           table: users_meta
           row:
-            id: 9
+            id: 12
             user_id: 3
             meta_key: color
             meta_value: teal
         - type: insert
           table: users_meta
           row:
-              id: 12
+              id: 13
               user_id: 7
               meta_key: food
               meta_value: potato

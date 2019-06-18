@@ -5,6 +5,7 @@
  */
 package com.gti.datamerge;
 
+import com.gti.datamerge.database.Column;
 import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
@@ -116,7 +117,7 @@ public class Database {
 
         for(Row row: mergeRows) {
             if(!isRowInRows(row, rows) || table.hasRelationship() && pIds.get(row.getVal(table.getRelationship().getColumn())) != null){
-                if(needsUpdate(table, row, mergeRows, pIds)) {
+                if(needsUpdate(table, row, rows, pIds)) {
                     actions.add(addAction(Action.UPDATE, row, table, 0));
                     continue;
                 }
@@ -148,7 +149,16 @@ public class Database {
             }
             for(Row cRow: rows) {
                if(pk != null && pc != null && row.getVal(pc).equals(cRow.getVal(pc)) && row.getVal(pk).equals(cRow.getVal(pk))) {
-                   return true;
+                   int columnCount = row.getColumns().size();
+                   int count = 0;
+                   for(String col: row.getColumns()) {
+                       if(row.getVal(col).equals(cRow.getVal(col))) {
+                           count++;
+                       }
+                   }
+                   if(count >= columnCount*0.5) {
+                       return true;
+                   }
                }
            }
         }
