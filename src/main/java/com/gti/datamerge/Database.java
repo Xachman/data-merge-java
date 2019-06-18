@@ -62,10 +62,7 @@ public class Database {
 
         List<Action> actions = new ArrayList<>();
         actions.addAll(getActions(table, db));
-        List<Table> relatedTables = dbc.getRelatedTables(table);
-        for(Table rTable : relatedTables) {
-            actions.addAll(getRelationshipActions(table, rTable, db, getActions(rTable, db)));
-        }
+
 		return actions;
     }
 
@@ -96,47 +93,19 @@ public class Database {
         return false;
     } 
 
-    private List<Action> addActionsForTable(Table table, List<Action> actions, Map<String,String> ids) {
-        for(Action action: actions) {
-            for(Map.Entry<String, String> entry: ids.entrySet()) {
-                if(action.getData().getVal(table.getRelationship().getColumn()).equals(entry.getKey())) {
-                    action.getData().setVal(table.getRelationship().getColumn(), entry.getValue());
-                }
-            }
-//            for(Row dbRow: dbRows) {
-//                if(dbRow.getVal(table.getRelationship().getColumn())
-//                        .equals(row.getVal(table.getRelationship().getParentColumn()))) {
-//                    Row newRow = new Row(dbRow);
-//
-//                    newRow.put(table.getPrimaryKey(),Integer.toString(increment));
-//                    newRow.put(table.getRelationship().getColumn(), ids.get(row.getVal(table.getRelationship().getParentColumn())));
-//                    collection.add(dbRow);
-//                    newIds.put(dbRow.getVal(table.getPrimaryKey()), Integer.toString(increment));
-//
-//                    increment++;
-//                    addAction(Action.INSERT, newRow, table, increment);
-//                }
-//            }
-        }
-//        for(Table rTable: dbc.getRelatedTables(table)) {
-//            addActionsForTable(rTable, db, collection, newIds);
-//        }
-        return actions;
-    }
 
     public List<Action> mergeTablesActions(Database db2) {
         List<Table> bTables = getBaseTables();
         List<Action> actions = new ArrayList<>();
         for(Table table: bTables) {
-           actions.addAll(getActions(table, db2));
-        }
-        for(Table table: bTables) {
 //            actions.addAll(getRelationshipActions(table, db2, getActions(table, db2)));
         }
         return actions;
     }
-
     private List<Action> getActions(Table table, Database db) {
+	    return getActions(table, db, new HashMap<>());
+    }
+    private List<Action> getActions(Table table, Database db, Map<String,String> pIds) {
 		List<Row> mergeRows = db.getRows(table.getName());
 		List<Row> rows = getRows(table.getName());
         Map<String, String> ids = new HashMap<>();
@@ -146,46 +115,43 @@ public class Database {
 
         for(Row row: mergeRows) {
             if(!isRowInRows(row, rows)){
+                if(needsUpdate(table, row, mergeRows, pIds)) {
+                    actions.add(addAction(Action.UPDATE, row, table, 0));
+                    continue;
+                }
                 increment++;
                 ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
+                if(table.hasRelationship()) {
+                    String nId = pIds.get(row.getVal(table.getRelationship().getColumn()));
+                    if(nId != null) {
+                        row.setVal(table.getRelationship().getColumn(), nId);
+                    }
+                }
                 actions.add(addAction(Action.INSERT, row, table, increment));
             }
+        }
+        List<Table> relatedTables = dbc.getRelatedTables(table);
+        for(Table rTable : relatedTables) {
+            actions.addAll(getActions(rTable, db, ids));
         }
         return actions;
 
     }
-    private boolean needsUpdate(Table table, Row row, List<Row> rows) {
-        for(Row cRow: rows) {
-           if(table.hasRelationship()) {
-               String pc = table.getRelationship().getParentColumn();
-               String pk = table.getPrimaryKey();
-               if(row.getVal(pc).equals(cRow.getVal(pc)) && row.getVal(pk).equals(cRow.getVal(pk))) {
+    private boolean needsUpdate(Table table, Row row, List<Row> rows, Map<String,String> pIds) {
+        if(table.hasRelationship()) {
+            String pc = table.getRelationship().getColumn();
+            String pk = table.getPrimaryKey();
+            String pcv = row.getVal(pc);
+            if(pIds.get(pcv) != null) {
+                return false;
+            }
+            for(Row cRow: rows) {
+               if(pk != null && pc != null && row.getVal(pc).equals(cRow.getVal(pc)) && row.getVal(pk).equals(cRow.getVal(pk))) {
                    return true;
                }
            }
         }
 	    return false;
-    }
-    private List<Action> getRelationshipActions(Table table, Table rTable, Database db, List<Action> actions) {
-		List<Row> rows = db.getRows(table.getName());
-		List<Row> dbRows = getRows(table.getName());
-        List<Row> addRows = new ArrayList<>();
-//        List<Table> relatedTables = dbc.getRelatedTables(table);
-        Map<String, String> ids = new HashMap<>();
-        int increment = table.getIncrement();
-
-
-        for(Row row: rows) {
-            if(!isRowInRows(row, dbRows)){
-                increment++;
-                addRows.add(row);
-                ids.put(row.getVal(table.getPrimaryKey()), Integer.toString(increment));
-            }
-        }
-
-
-        return addActionsForTable(rTable, actions, ids);
-
     }
 
     private List<Table> getBaseTables() {

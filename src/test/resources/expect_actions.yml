@@ -31,28 +31,28 @@ actions:
         - type: insert
           table: users_meta
           row:
-              id: 11
+              id: 10
               user_id: 6
               meta_key: color
               meta_value: black
         - type: insert
           table: users_meta
           row:
-              id: 12
+              id: 11
               user_id: 7
               meta_key: color
               meta_value: blue
-        - type: insert
+        - type: update
           table: users_meta
           row:
-            id: 13
-            user_id: 2
+            id: 9
+            user_id: 3
             meta_key: color
             meta_value: teal
         - type: insert
           table: users_meta
           row:
-              id: 14
+              id: 12
               user_id: 7
               meta_key: food
               meta_value: potato

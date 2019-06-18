@@ -31,24 +31,31 @@ actions:
         - type: insert
           table: users_meta
           row:
-              id: 10
-              user_id: 6
-              meta_key: color
-              meta_value: black
+            id: 10
+            user_id: 6
+            meta_key: color
+            meta_value: black
         - type: insert
           table: users_meta
           row:
-              id: 11
-              user_id: 7
-              meta_key: color
-              meta_value: blue
+            id: 11
+            user_id: 7
+            meta_key: color
+            meta_value: blue
+        - type: update
+          table: users_meta
+          row:
+            id: 9
+            user_id: 3
+            meta_key: color
+            meta_value: teal
         - type: insert
           table: users_meta
           row:
-              id: 12
-              user_id: 7
-              meta_key: food
-              meta_value: potato
+            id: 12
+            user_id: 7
+            meta_key: food
+            meta_value: potato
     - table: posts
       actions:
         - type: insert
