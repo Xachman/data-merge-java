@@ -95,10 +95,11 @@ public class Database {
 
 
     public List<Action> mergeTablesActions(Database db2) {
-        List<Table> bTables = getBaseTables();
-        List<Action> actions = new ArrayList<>();
-        for(Table table: bTables) {
-//            actions.addAll(getRelationshipActions(table, db2, getActions(table, db2)));
+	    List<Action> actions = new ArrayList<>();
+        for(Table table: tables) {
+            if(!table.hasRelationship()){
+                actions.addAll(getActions(table, db2));
+            }
         }
         return actions;
     }
@@ -114,7 +115,7 @@ public class Database {
 
 
         for(Row row: mergeRows) {
-            if(!isRowInRows(row, rows)){
+            if(!isRowInRows(row, rows) || table.hasRelationship() && pIds.get(row.getVal(table.getRelationship().getColumn())) != null){
                 if(needsUpdate(table, row, mergeRows, pIds)) {
                     actions.add(addAction(Action.UPDATE, row, table, 0));
                     continue;

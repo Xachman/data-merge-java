@@ -133,8 +133,6 @@ public class DatabaseTest {
         int cat = compareActions(expectActions, actions, "categories");
         System.out.println("categories_v_posts");
         int cat_v_posts = compareActions(expectActions, actions, "categories_v_posts");
-        
-        Assert.assertTrue(cat < cat_v_posts);
 	}
 
     private int compareActions(ExpectActionsYml expectActions, List<Action> actions, String tableName) {
