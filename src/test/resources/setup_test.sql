@@ -46,7 +46,7 @@ INSERT INTO users_meta (user_id, meta_key, meta_value) VALUES (1, 'address', '12
 (2, 'phone', '555-555-5556'),
 (3, 'address', '935 wall street'),
 (3, 'phone', '555-555-5589');
-
+(2, 'home_phone', '555-555-5569');
 
 USE database2;
 
@@ -77,3 +77,4 @@ INSERT INTO users_meta (user_id, meta_key, meta_value) VALUES
 (3, 'address', '456 elm street'),
 (2, 'phone', '555-555-5557'),
 (3, 'phone', '555-555-5550');
+(2, 'home_phone', '555-555-5570');

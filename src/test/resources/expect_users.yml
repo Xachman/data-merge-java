@@ -49,3 +49,8 @@ tables:
           user_id: 4
           meta_key: phone
           meta_value: 555-555-5550
+        - id: 9
+          type: update
+          user_id: 2
+          meta_key: phone
+          meta_value: 555-555-5570
