@@ -67,6 +67,10 @@ tables:
           meta_key: color
           meta_value: teal
         - id: 10
+          user_id: 2
+          meta_key: color
+          meta_value:
+        - id: 11
           user_id: 5
           meta_key: food
           meta_value: potato

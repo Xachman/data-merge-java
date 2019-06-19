@@ -76,6 +76,10 @@ public class DatabaseConnection extends AbstractDatabaseConnection {
 						row.put(key, Integer.toString((int)val));
 						continue;
 					}
+					if(val == null) {
+						row.put(key, null);
+						continue;
+					}
 					row.put(key, val.toString());
 				}
 				rows.add(row);

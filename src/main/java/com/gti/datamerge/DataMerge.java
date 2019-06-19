@@ -7,6 +7,8 @@ package com.gti.datamerge;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.gti.datamerge.DatabaseConnection.Mysql;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -14,6 +16,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
+import javax.xml.crypto.Data;
 
 /**
  *
@@ -56,13 +60,22 @@ public class DataMerge {
 		Option connectionType = new Option("t", "type", true, "Type of connection ex: mysql");
 
 		options.addOption(connectionType);
-		
+
+		Option actionsOption = new Option(null, "actions", false, "Print out all actions that would be taken");
+		options.addOption(actionsOption);
+
+		Option tableOption = new Option(null, "table", true, "Table to be merged");
+		options.addOption(tableOption);
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd;
 		
 		try {
 			cmd = parser.parse(options, args);
+			if(cmd.hasOption("actions")) {
+			}else{
+				mergeData(cmd);
+			}
 		} catch (ParseException ex) {
 			System.out.println(ex.getMessage());
 			formatter.printHelp("database-merge", options);
@@ -72,7 +85,30 @@ public class DataMerge {
 
 	}
 	
-	public void mergeData() {
-		
+	static public void mergeData(CommandLine cmd) {
+		String type = "mysql";
+		DatabaseConnectionI dbc1;
+		DatabaseConnectionI dbc2;
+		Database db1;
+		Database db2;
+
+		if(cmd.hasOption("t")) {
+			type = cmd.getOptionValue("t");
+		}
+
+		if(type == "mysql") {
+			dbc1 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d1h")+"/"+cmd.getOptionValue("d1")+"?user="+cmd.getOptionValue("d1u")+"&password="+cmd.getOptionValue("d1p")+"&zeroDateTimeBehavior=convertToNull");
+			dbc2 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d2h")+"/"+cmd.getOptionValue("d2")+"?user="+cmd.getOptionValue("d2u")+"&password="+cmd.getOptionValue("d2p")+"&zeroDateTimeBehavior=convertToNull");
+			db1 = new Database(dbc1);
+			db2 = new Database(dbc2);
+
+			if(cmd.hasOption("table")) {
+				db1.mergeTable(cmd.getOptionValue("table"), db2);
+				return;
+			}
+			db1.merge(db2);
+
+		}
+
 	}	
 }

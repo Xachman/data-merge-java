@@ -66,6 +66,10 @@ tables:
           user_id: 5
           meta_key: color
           meta_value: brown
+        - id: 10
+          user_id: 2
+          meta_key: color
+          meta_value:
     - name: posts
       data:
         - id: 1

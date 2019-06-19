@@ -83,7 +83,7 @@ public class Database {
                 String rowVal = (String) row.getMap().get(key);
                 String dbVal = (String) dbRow.getMap().get(key);
                 totalCount++;
-                if(dbVal != null && dbVal.equals(rowVal)) {
+                if(dbVal == null && rowVal == null || dbVal != null && dbVal.equals(rowVal)) {
                     countIsE++;
                 }
             }	
@@ -152,7 +152,7 @@ public class Database {
                    int columnCount = row.getColumns().size();
                    int count = 0;
                    for(String col: row.getColumns()) {
-                       if(row.getVal(col).equals(cRow.getVal(col))) {
+                       if(row.getVal(col) == null && cRow.getVal(col) == null || row.getVal(col) != null && row.getVal(col).equals(cRow.getVal(col))) {
                            count++;
                        }
                    }
