@@ -38,19 +38,24 @@ tables:
           meta_key: phone
           meta_value: 555-555-5589
         - id: 6
+          user_id: 2
+          meta_key: home_phone
+          meta_value: 555-555-5570
+        - id: 7
           user_id: 4
           meta_key: address
           meta_value: 456 elm street
-        - id: 7
+        - id: 8
           user_id: 2
           meta_key: phone
           meta_value: 555-555-5557
-        - id: 8
+        - id: 9
           user_id: 4
           meta_key: phone
           meta_value: 555-555-5550
-        - id: 9
-          type: update
-          user_id: 2
-          meta_key: phone
-          meta_value: 555-555-5570
+    - name: posts
+      data:
+        - id: 4
+          user_id: 4
+          content: Post 4 content
+          created_date: 0000-00-00 00:00:00

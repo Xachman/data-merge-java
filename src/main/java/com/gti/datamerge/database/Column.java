@@ -5,6 +5,8 @@
  */
 package com.gti.datamerge.database;
 
+import com.gti.datamerge.Database;
+
 /**
  *
  * @author Xachman
@@ -14,13 +16,15 @@ public class Column {
     private int type;
     public final static int NUMBER = 1;
     public final static int STRING = 2;
+    public final static int DATETIME = 3;
 	private Relationship relationship;
 
 	public Column(String name) {
 		this.name = name;
 	}
 	
-	public Column(String name, String type) {
+	public Column(String name, int t) {
+		type = t;
 		this.name = name;
 	}
 	public Column(String name, Relationship relationship) {
@@ -38,6 +42,7 @@ public class Column {
 		}
 		return false;
 	}
+
 
     public int getType() {
         return type; 

@@ -101,10 +101,10 @@ public class DataMergeTest extends BaseClass {
 	@Test
 	public void testDataMergeTable() throws FileNotFoundException {
 		// TODO review the generated test code and remove the default call to fail.
-        DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root");
+        DatabaseConnectionI dbc1 = new Mysql("jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root&zeroDateTimeBehavior=convertToNull");
 
 
-        DatabaseConnectionI dbc2 = new Mysql("jdbc:mysql://"+dbcHost+":4000/database2?user=root&password=root");
+        DatabaseConnectionI dbc2 = new Mysql("jdbc:mysql://"+dbcHost+":4000/database2?user=root&password=root&zeroDateTimeBehavior=convertToNull");
 
         Database db1 = new Database(dbc1);
         Database db2 = new Database(dbc2);
@@ -140,7 +140,6 @@ public class DataMergeTest extends BaseClass {
             ResultSetMetaData users_meta_md = rs_users_meta.getMetaData();
 		    count = 0;	
             while(rs_users_meta.next()) {
-                System.out.println(count);
                 for(int i = 1; i <= users_meta_md.getColumnCount(); i++) {
                     String columnName = users_meta_md.getColumnName(i);
                     String result = rs_users_meta.getString(columnName);
@@ -150,6 +149,19 @@ public class DataMergeTest extends BaseClass {
                 count++;
                  
             }
+			ResultSet rs_posts = stmt.executeQuery("SELECT * FROM posts");
+			ResultSetMetaData posts_md = rs_users_meta.getMetaData();
+			count = 0;
+			while(rs_posts.next()) {
+				for(int i = 1; i <= posts_md.getColumnCount(); i++) {
+					String columnName = posts_md.getColumnName(i);
+					String result = rs_posts.getString(columnName);
+					Map<String,Object> tableData = expect.getTables().get(1).getData().get(count);
+					assertEquals(tableData.get(columnName).toString(), result);
+				}
+				count++;
+
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
             fail("Something wrong");

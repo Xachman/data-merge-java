@@ -151,11 +151,21 @@ public class Mysql extends AbstractDatabaseConnection {
         while(rs.next()) {
             String name = rs.getString(1);
             String key = rs.getString(4);
+            String type = rs.getString(2);
+            rs.getMetaData();
             if(key.equals("PRI")) {
                 primaryKey = name;
             }
-            
-            columns.add(new Column(name));
+
+            if(type.contains("int")) {
+                columns.add(new Column(name, Column.NUMBER));
+                continue;
+            }
+            if(type.contains("datetime")) {
+                columns.add(new Column(name, Column.DATETIME));
+                continue;
+            }
+            columns.add(new Column(name, Column.STRING));
         }
         return new Table(tableName, columns, primaryKey,  getTableIncrement(tableName, conn)-1, relationships);
     }
@@ -257,7 +267,7 @@ public class Mysql extends AbstractDatabaseConnection {
                 values.append(",");
                 columns.append(",");
             }
-            values.append("'"+row.getVal(column.getName())+"'");
+            values.append(getFormatValue(column, row.getVal(column.getName())));
             columns.append("`"+column.getName()+"`");
         }
         columns.append(") VALUES ");
@@ -268,6 +278,8 @@ public class Mysql extends AbstractDatabaseConnection {
         switch(column.getType()) {
             case Column.NUMBER:
                 return value;
+            case Column.DATETIME:
+                if(value == null) return "'0000-00-00 00:00:00'";
             default:
                 return "'"+value+"'";
         }
