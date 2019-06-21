@@ -97,8 +97,8 @@ public class DataMerge {
 		}
 
 		if(type == "mysql") {
-			dbc1 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d1h")+"/"+cmd.getOptionValue("d1")+"?user="+cmd.getOptionValue("d1u")+"&password="+cmd.getOptionValue("d1p")+"&zeroDateTimeBehavior=convertToNull");
-			dbc2 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d2h")+"/"+cmd.getOptionValue("d2")+"?user="+cmd.getOptionValue("d2u")+"&password="+cmd.getOptionValue("d2p")+"&zeroDateTimeBehavior=convertToNull");
+			dbc1 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d1h")+"/"+cmd.getOptionValue("d1")+"?user="+cmd.getOptionValue("d1u")+"&password="+cmd.getOptionValue("d1p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
+			dbc2 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d2h")+"/"+cmd.getOptionValue("d2")+"?user="+cmd.getOptionValue("d2u")+"&password="+cmd.getOptionValue("d2p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
 			db1 = new Database(dbc1);
 			db2 = new Database(dbc2);
 

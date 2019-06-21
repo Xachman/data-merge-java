@@ -308,7 +308,7 @@ public class Mysql extends AbstractDatabaseConnection {
             case Column.NUMBER:
                 return value;
             case Column.DATETIME:
-                if(value == null) return "'0000-00-00 00:00:00'";
+                if(value == null) return "'0000-00-00 00:00:00.0'";
             default:
                 return "'"+value+"'";
         }
