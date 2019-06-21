@@ -5,6 +5,8 @@
  */
 package com.gti.datamerge;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,6 +75,11 @@ public class DataMerge {
 		try {
 			cmd = parser.parse(options, args);
 			if(cmd.hasOption("actions")) {
+				System.out.println("actions");
+				for(Action action : getActions(cmd)) {
+					System.out.println(action);
+				}
+
 			}else{
 				mergeData(cmd);
 			}
@@ -96,7 +103,7 @@ public class DataMerge {
 			type = cmd.getOptionValue("t");
 		}
 
-		if(type == "mysql") {
+		if(type.equals("mysql")) {
 			dbc1 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d1h")+"/"+cmd.getOptionValue("d1")+"?user="+cmd.getOptionValue("d1u")+"&password="+cmd.getOptionValue("d1p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
 			dbc2 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d2h")+"/"+cmd.getOptionValue("d2")+"?user="+cmd.getOptionValue("d2u")+"&password="+cmd.getOptionValue("d2p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
 			db1 = new Database(dbc1);
@@ -110,5 +117,30 @@ public class DataMerge {
 
 		}
 
-	}	
+	}
+
+	static List<Action> getActions(CommandLine cmd) {
+		String type = "mysql";
+		DatabaseConnectionI dbc1;
+		DatabaseConnectionI dbc2;
+		Database db1;
+		Database db2;
+
+		if(cmd.hasOption("t")) {
+			type = cmd.getOptionValue("t");
+		}
+
+		if(type.equals("mysql")) {
+			dbc1 = new Mysql("jdbc:mysql://" + cmd.getOptionValue("d1h") + "/" + cmd.getOptionValue("d1") + "?user=" + cmd.getOptionValue("d1u") + "&password=" + cmd.getOptionValue("d1p") + "&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
+			dbc2 = new Mysql("jdbc:mysql://" + cmd.getOptionValue("d2h") + "/" + cmd.getOptionValue("d2") + "?user=" + cmd.getOptionValue("d2u") + "&password=" + cmd.getOptionValue("d2p") + "&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
+			db1 = new Database(dbc1);
+			db2 = new Database(dbc2);
+
+			if (cmd.hasOption("table")) {
+				return db1.mergeTableActions(cmd.getOptionValue("table"), db2);
+			}
+			return db1.mergeTablesActions(db2);
+		}
+		return null;
+	}
 }
