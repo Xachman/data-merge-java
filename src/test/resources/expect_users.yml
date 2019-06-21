@@ -55,7 +55,21 @@ tables:
           meta_value: 555-555-5550
     - name: posts
       data:
+        - id: 1
+          user_id: 1
+          content: Post 1 content
+          created_date: '2019-03-30 10:00:00.0'
+        - id: 2
+          user_id: 2
+          content: Post 2 content
+          created_date: '2019-03-30 10:00:00.0'
+        - id: 3
+          user_id: 3
+          content: Post 3 content
+          created_date: '2019-03-30 10:00:00.0'
         - id: 4
           user_id: 4
           content: Post 4 content
-          created_date: 0000-00-00 00:00:00
+          created_date:
+
+

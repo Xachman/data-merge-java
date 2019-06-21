@@ -233,6 +233,9 @@ public class Mysql extends AbstractDatabaseConnection {
                 case Action.INSERT:
                     executeInsert(action, conn);
                     break;
+                case Action.UPDATE:
+                    executeUpdate(action, conn);
+                    break;
             }
         } catch (SQLException ex) {
             Logger.getLogger(Mysql.class.getName()).log(Level.SEVERE, null, ex);
@@ -254,6 +257,17 @@ public class Mysql extends AbstractDatabaseConnection {
         stmt.execute(sb.toString());
     }
 
+    private void executeUpdate(Action action, Connection conn) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("UPDATE ");
+        sb.append(action.getTableName());
+        sb.append(" SET ");
+        sb.append(formatRowForUpdate(action.getTableName(), action.getData()));
+        String pk = this.getTable(action.getTableName()).getPrimaryKey();
+        sb.append(" WHERE "+pk+"='"+action.getData().getVal(pk)+"'");
+        Statement stmt =  conn.createStatement();
+        stmt.execute(sb.toString());
+    }
     private String formatRowForInsert(String tableName, Row row) {
         StringBuilder columns =  new StringBuilder();
         StringBuilder values = new StringBuilder();
@@ -267,14 +281,29 @@ public class Mysql extends AbstractDatabaseConnection {
                 values.append(",");
                 columns.append(",");
             }
-            values.append(getFormatValue(column, row.getVal(column.getName())));
+            values.append(formatValue(column, row.getVal(column.getName())));
             columns.append("`"+column.getName()+"`");
         }
         columns.append(") VALUES ");
         values.append(")");
         return columns.toString()+values.toString();
     }
-    private String getFormatValue(Column column, String value) {
+    private String formatRowForUpdate(String tableName, Row row) {
+        StringBuilder values = new StringBuilder();
+        Table table = getTable(tableName);
+        int count=0;
+        for(Column column: table.getColumns()) {
+            count++;
+            if(count > 1) {
+                values.append(",");
+            }
+            values.append(column.getName());
+            values.append("=");
+            values.append(formatValue(column, row.getVal(column.getName())));
+        }
+        return values.toString();
+    }
+    private String formatValue(Column column, String value) {
         switch(column.getType()) {
             case Column.NUMBER:
                 return value;

@@ -58,8 +58,8 @@ public class DataMergeTest extends BaseClass {
 		Config config = new Yaml().loadAs(actionsInput, Config.class);
 
 		dbcHost = config.getHost();
-		connectionUrl = "jdbc:mysql://"+dbcHost+":4000?user=root&password=root";
-		connectionUrlDB1 = "jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root";
+		connectionUrl = "jdbc:mysql://"+dbcHost+":4000?user=root&password=root&zeroDateTimeBehavior=convertToNull";
+		connectionUrlDB1 = "jdbc:mysql://"+dbcHost+":4000/database1?user=root&password=root&zeroDateTimeBehavior=convertToNull";
 		ClassLoader classLoader = getClass().getClassLoader();
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -150,13 +150,17 @@ public class DataMergeTest extends BaseClass {
                  
             }
 			ResultSet rs_posts = stmt.executeQuery("SELECT * FROM posts");
-			ResultSetMetaData posts_md = rs_users_meta.getMetaData();
+			ResultSetMetaData posts_md = rs_posts.getMetaData();
 			count = 0;
 			while(rs_posts.next()) {
 				for(int i = 1; i <= posts_md.getColumnCount(); i++) {
 					String columnName = posts_md.getColumnName(i);
 					String result = rs_posts.getString(columnName);
-					Map<String,Object> tableData = expect.getTables().get(1).getData().get(count);
+					Map<String,Object> tableData = expect.getTables().get(2).getData().get(count);
+					if(tableData.get(columnName) == null) {
+						assertEquals(tableData.get(columnName), result);
+						continue;
+					}
 					assertEquals(tableData.get(columnName).toString(), result);
 				}
 				count++;
