@@ -1,0 +1,35 @@
+## YAML Template.
+---
+tables:
+    - name: users_meta
+      columns:
+        - id
+        - user_id
+        - meta_key
+        - meta_value
+      primary_key: id
+    - name: users
+      columns:
+        - id
+        - username
+        - email
+        - address
+        - phone
+      primary_key: id
+    - name: posts
+      primary_key: id
+      columns:
+        - id
+        - post_author
+        - content
+        - title
+    - name: categories
+      primary_key: id
+      columns:
+          - id
+          - name
+    - name: categories_v_posts
+      columns:
+           - post_id
+           - category_id
+

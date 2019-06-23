@@ -64,6 +64,9 @@ public class Table {
         if(getRelationship() != null && getRelationship().getTable().equals(table.getName())) return true;
         return false;
     }
+    public void addRelationship(Relationship r) {
+	    relationships.add(r);
+    }
     public Relationship getRelationship() {
         return relationships.get(0);
     }

@@ -5,6 +5,8 @@
  */
 package com.gti.datamerge;
 
+import com.gti.datamerge.Config.Config;
+import com.gti.datamerge.Config.Constraint;
 import com.gti.datamerge.database.Column;
 import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
@@ -30,6 +32,16 @@ public class Database {
 		this.dbc = dbc;
 		tables = dbc.getAllTables();
 	}
+    public Database(DatabaseConnectionI dbc, Config config) {
+        this.dbc = dbc;
+        tables = dbc.getAllTables();
+        for(Constraint constraint: config.getConstraints()) {
+            Table table = getTable(constraint.getTable());
+            for(Map<String, String> column: constraint.getColumns()) {
+                table.addRelationship(new Relationship(column.get("table"), column.get("name"), column.get("key")));
+            }
+        }
+    }
 
 	public void merge(Database database) {
         for(Table table: tables) {

@@ -19,7 +19,7 @@ public class ConfigTest extends BaseClass {
         assertEquals("id", config.getConstraints().get(0).getColumns().get(0).get("key"));
         assertEquals("posts", config.getConstraints().get(0).getColumns().get(0).get("table"));
 
-        assertEquals("usersmeta", config.getConstraints().get(1).getTable());
+        assertEquals("users_meta", config.getConstraints().get(1).getTable());
         assertEquals("user_id", config.getConstraints().get(1).getColumns().get(0).get("name"));
         assertEquals("id", config.getConstraints().get(1).getColumns().get(0).get("key"));
         assertEquals("users", config.getConstraints().get(1).getColumns().get(0).get("table"));
