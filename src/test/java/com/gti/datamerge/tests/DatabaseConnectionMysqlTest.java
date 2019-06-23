@@ -88,7 +88,7 @@ public class DatabaseConnectionMysqlTest extends BaseClass {
         Assert.assertEquals("id", table.getPrimaryKey());
         Assert.assertEquals("user_id", table.getRelationship().getColumn());
         Assert.assertEquals("id", table.getRelationship().getParentColumn());
-        Assert.assertEquals(5, table.getIncrement());
+        Assert.assertEquals(6, table.getIncrement());
 
     }
 }

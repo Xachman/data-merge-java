@@ -1,0 +1,21 @@
+constraints:
+  - table: postsmeta
+    columns:
+      - name: post_id
+        table: posts
+        key: id
+  - table: usersmeta
+    columns:
+      - name: user_id
+        table: users
+        key: id
+  - table: category_v_posts
+    columns:
+      - name: post_id
+        table: posts
+        key: id
+      - name: category_id
+        table: categories
+        key: cat_id
+
+
