@@ -15,11 +15,8 @@ import java.util.List;
  */
 public interface DatabaseConnectionI {
 	public Row get(Table table, int id);	
-	public List<Row> getAll(Table table);	
-	public List<Row> getAll(String tableName);	
+	public List<Row> getAll(String tableName);
 	public List<Table> getAllTables();	
-    public int getNextIncrement(String tableName);
-    public List<Table> getRelatedTables(Table table);
     public void setActions(List<Action> actions);
     public void commit();
 }

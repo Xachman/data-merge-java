@@ -5,8 +5,8 @@
  */
 package com.gti.datamerge.DatabaseConnection;
 
-import com.gti.datamerge.AbstractDatabaseConnection;
 import com.gti.datamerge.Action;
+import com.gti.datamerge.DatabaseConnectionI;
 import com.gti.datamerge.database.Column;
 import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
@@ -27,7 +27,7 @@ import java.sql.Types;
  *
  * @author Xachman
  */
-public class Mysql extends AbstractDatabaseConnection {
+public class Mysql implements DatabaseConnectionI {
     private String connectionUrl; 
     private List<Action> actions;
     public Mysql(String conn) {
@@ -94,11 +94,6 @@ public class Mysql extends AbstractDatabaseConnection {
             rows.add(row);
         }
         return rows;
-    }
-    @Override
-    public List<Row> getAll(Table table) {
-        String sql = "SELECT * FROM "+table.getName();
-        return executeQuery(sql);
     }
 
     @Override
@@ -209,10 +204,6 @@ public class Mysql extends AbstractDatabaseConnection {
             return rs.getInt(1);
         }
         return 0;
-    }
-    @Override
-    public int getNextIncrement(String tableName) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

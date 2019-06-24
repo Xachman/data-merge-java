@@ -5,8 +5,8 @@
  */
 package com.gti.datamerge.mocks;
 
-import com.gti.datamerge.AbstractDatabaseConnection;
 import com.gti.datamerge.Action;
+import com.gti.datamerge.DatabaseConnectionI;
 import com.gti.datamerge.database.Column;
 import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
@@ -20,7 +20,7 @@ import java.util.Map;
  *
  * @author Xachman
  */
-public class DatabaseConnection extends AbstractDatabaseConnection {
+public class DatabaseConnection implements DatabaseConnectionI {
 	private Map<String,List<Row>> tableRows = new HashMap<>();
 	private List<Table> tables = new ArrayList<>();
 	public DatabaseConnection() {
@@ -107,19 +107,9 @@ public class DatabaseConnection extends AbstractDatabaseConnection {
 	}
 
 	@Override
-	public List<Row> getAll(Table table) {
-		return tableRows.get(table.getName());
-	}
-
-	@Override
 	public List<Table> getAllTables() {
 		return tables;
 	}
-
-    @Override
-    public int getNextIncrement(String tableName) {
-        return tableRows.get(tableName).size();
-    }
 
     @Override
     public void setActions(List<Action> actions) {

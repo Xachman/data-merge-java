@@ -5,11 +5,13 @@
  */
 package com.gti.datamerge;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.gti.datamerge.Config.Config;
 import com.gti.datamerge.DatabaseConnection.Mysql;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -68,20 +70,29 @@ public class DataMerge {
 
 		Option tableOption = new Option(null, "table", true, "Table to be merged");
 		options.addOption(tableOption);
+
+		Option configFileOption = new Option(null, "config", true, "Yaml config file");
+		options.addOption(configFileOption);
+
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
 		CommandLine cmd;
-		
+
+
 		try {
 			cmd = parser.parse(options, args);
+			Config config = null;
+			if(cmd.hasOption("config")) {
+				config = new Config(new File(cmd.getOptionValue("config")));
+			}
 			if(cmd.hasOption("actions")) {
 				System.out.println("actions");
-				for(Action action : getActions(cmd)) {
+				for(Action action : getActions(cmd, config)) {
 					System.out.println(action);
 				}
 
 			}else{
-				mergeData(cmd);
+				mergeData(cmd, config);
 			}
 		} catch (ParseException ex) {
 			System.out.println(ex.getMessage());
@@ -92,7 +103,7 @@ public class DataMerge {
 
 	}
 	
-	static public void mergeData(CommandLine cmd) {
+	static public void mergeData(CommandLine cmd, Config config) {
 		String type = "mysql";
 		DatabaseConnectionI dbc1;
 		DatabaseConnectionI dbc2;
@@ -106,8 +117,13 @@ public class DataMerge {
 		if(type.equals("mysql")) {
 			dbc1 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d1h")+"/"+cmd.getOptionValue("d1")+"?user="+cmd.getOptionValue("d1u")+"&password="+cmd.getOptionValue("d1p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
 			dbc2 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d2h")+"/"+cmd.getOptionValue("d2")+"?user="+cmd.getOptionValue("d2u")+"&password="+cmd.getOptionValue("d2p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
-			db1 = new Database(dbc1);
-			db2 = new Database(dbc2);
+			if(config != null) {
+				db1 = new Database(dbc1, config);
+				db2 = new Database(dbc2, config);
+			}else{
+				db1 = new Database(dbc1);
+				db2 = new Database(dbc2);
+			}
 
 			if(cmd.hasOption("table")) {
 				db1.mergeTable(cmd.getOptionValue("table"), db2);
@@ -119,7 +135,7 @@ public class DataMerge {
 
 	}
 
-	static List<Action> getActions(CommandLine cmd) {
+	static List<Action> getActions(CommandLine cmd, Config config) {
 		String type = "mysql";
 		DatabaseConnectionI dbc1;
 		DatabaseConnectionI dbc2;
@@ -133,8 +149,13 @@ public class DataMerge {
 		if(type.equals("mysql")) {
 			dbc1 = new Mysql("jdbc:mysql://" + cmd.getOptionValue("d1h") + "/" + cmd.getOptionValue("d1") + "?user=" + cmd.getOptionValue("d1u") + "&password=" + cmd.getOptionValue("d1p") + "&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
 			dbc2 = new Mysql("jdbc:mysql://" + cmd.getOptionValue("d2h") + "/" + cmd.getOptionValue("d2") + "?user=" + cmd.getOptionValue("d2u") + "&password=" + cmd.getOptionValue("d2p") + "&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
-			db1 = new Database(dbc1);
-			db2 = new Database(dbc2);
+			if(config != null) {
+				db1 = new Database(dbc1, config);
+				db2 = new Database(dbc2, config);
+			}else{
+				db1 = new Database(dbc1);
+				db2 = new Database(dbc2);
+			}
 
 			if (cmd.hasOption("table")) {
 				return db1.mergeTableActions(cmd.getOptionValue("table"), db2);

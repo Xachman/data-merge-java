@@ -144,12 +144,22 @@ public class Database {
                 actions.add(addAction(Action.INSERT, row, table, increment));
             }
         }
-        List<Table> relatedTables = dbc.getRelatedTables(table);
-        for(Table rTable : relatedTables) {
+
+        for(Table rTable : getRelatedTables(table)) {
             actions.addAll(getActions(rTable, db, ids));
         }
         return actions;
 
+    }
+    public List<Table> getRelatedTables(Table table) {
+        List<Table> result = new ArrayList<>();
+        for(Table tItem: tables)  {
+            if(tItem.hasRelationship(table)) {
+                result.add(tItem);
+            }
+        }
+
+        return result;
     }
     private boolean needsUpdate(Table table, Row row, List<Row> rows, Map<String,String> pIds) {
         if(table.hasRelationship()) {
