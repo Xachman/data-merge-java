@@ -1,4 +1,4 @@
-package com.gti.datamerge.Config;
+package com.gti.datamerge.config;
 
 import java.util.List;
 import java.util.Map;

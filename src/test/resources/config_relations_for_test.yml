@@ -1,0 +1,23 @@
+tables:
+  - name: posts
+    relationships:
+      - parent:
+          column: id
+          name: users
+        column: post_author
+  - name: users_meta
+    relationships:
+      - parent:
+          column: id
+          name: users
+        column: user_id
+  - name: categories_v_posts
+    relationships:
+      - parent:
+          column: id
+          name: posts
+        column: post_id
+      - parent:
+          column: id
+          name: categories
+        column: category_id

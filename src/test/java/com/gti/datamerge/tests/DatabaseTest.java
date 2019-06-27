@@ -6,14 +6,13 @@
 package com.gti.datamerge.tests;
 
 import com.gti.datamerge.Action;
-import com.gti.datamerge.Config.Config;
+import com.gti.datamerge.config.Config;
 import com.gti.datamerge.Database;
 import com.gti.datamerge.mocks.ActionYml;
 import com.gti.datamerge.mocks.DataYml;
 import com.gti.datamerge.mocks.DatabaseConnection;
 import com.gti.datamerge.mocks.ExpectActionYml;
 import com.gti.datamerge.mocks.ExpectActionsYml;
-import com.gti.datamerge.mocks.TableDataYml;
 import com.gti.datamerge.mocks.TablesYml;
 import java.io.File;
 import java.io.FileInputStream;
@@ -95,7 +94,7 @@ public class DatabaseTest {
 
 	@Test
 	public void testTableNRMerge() throws FileNotFoundException, Exception {
-		Config config = new Config(new File(getResource("config_constraints_for_test.yml")));
+		Config config = new Config(new File(getResource("config_relations_for_test.yml")));
 
 		Database db1 = new Database(dbc1NR, config);
 		Database db2 = new Database(dbc2NR, config);

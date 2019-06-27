@@ -1,4 +1,4 @@
-package com.gti.datamerge.Config;
+package com.gti.datamerge.config;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Config {
     private File file;
-    private List<Constraint> constraints;
+    private List<Table> tables;
     private Yaml yaml;
     private ConfigYML configYML;
 
@@ -22,13 +22,13 @@ public class Config {
             InputStream IS = new FileInputStream(file);
             yaml = new Yaml(new Constructor(ConfigYML.class));
             configYML = yaml.load(IS);
-            constraints = configYML.getConstraints();
+            tables = configYML.getTables();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Constraint> getConstraints() {
-        return constraints;
+    public List<Table> getTables() {
+        return tables;
     }
 }

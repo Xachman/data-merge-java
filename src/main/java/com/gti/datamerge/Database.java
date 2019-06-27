@@ -5,9 +5,7 @@
  */
 package com.gti.datamerge;
 
-import com.gti.datamerge.Config.Config;
-import com.gti.datamerge.Config.Constraint;
-import com.gti.datamerge.database.Column;
+import com.gti.datamerge.config.Config;
 import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
@@ -18,9 +16,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.lang.ArrayUtils;
 
-/**
+    /**
  *
  * @author Xachman
  */
@@ -35,11 +32,10 @@ public class Database {
     public Database(DatabaseConnectionI dbc, Config config) {
         this.dbc = dbc;
         tables = dbc.getAllTables();
-        for(Constraint constraint: config.getConstraints()) {
-            Table table = getTable(constraint.getTable());
-            for(Map<String, String> column: constraint.getColumns()) {
-                table.addRelationship(new Relationship(column.get("table"), column.get("name"), column.get("key")));
-            }
+        for(com.gti.datamerge.config.Table table: config.getTables()) {
+            Table cTable = getTable(table.getName());
+            for(com.gti.datamerge.config.Relationship relationship: table.getRelationships())
+            cTable.addRelationship(new Relationship(relationship.getParent().getName(), relationship.getColumn(), relationship.getParent().getColumn()));
         }
     }
 
@@ -67,7 +63,7 @@ public class Database {
         for(Table table: tables) {
             if(table.getName().equals(tableName))return table;
         } 
-        throw new IllegalArgumentException("Table not found");
+        throw new IllegalArgumentException("Table "+tableName+" not found");
     }
             
     public List<Action> mergeTableActions(String tableName, Database db) throws IllegalArgumentException {
