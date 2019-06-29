@@ -8,6 +8,8 @@ package com.gti.datamerge;
 import com.gti.datamerge.database.Column;
 import com.gti.datamerge.database.Row;
 
+import java.util.Set;
+
 /**
  *
  * @author Xachman
@@ -76,5 +78,29 @@ public class Action {
         sb.append(" ]");
         
         return sb.toString();
+    }
+
+    public String toJson() {
+	    StringBuilder sb = new StringBuilder();
+
+        sb.append("{\"table\":");
+	    sb.append("\""+table+"\",");
+
+        sb.append("\"type\":");
+        sb.append("\""+getTypeAsString()+"\",");
+
+        sb.append("\"row\":{");
+        int count = 0;
+        int totalCount = data.getColumns().size();
+        for(String column: data.getColumns()) {
+            sb.append("\""+column+"\":");
+            sb.append("\""+data.getVal(column)+"\"");
+            count++;
+            if(count < totalCount) {
+                sb.append(",");
+            }
+        }
+        sb.append("}}");
+	    return sb.toString();
     }
 }

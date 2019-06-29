@@ -81,10 +81,19 @@ public class DataMerge {
 				config = new Config(new File(cmd.getOptionValue("config")));
 			}
 			if(cmd.hasOption("actions")) {
-				System.out.println("actions");
-				for(Action action : getActions(cmd, config)) {
-					System.out.println(action);
+				System.out.println("[");
+				int count = 0;
+				List<Action> actions = getActions(cmd, config);
+				int total = actions.size();
+				for(Action action : actions) {
+					String print = action.toJson();
+					count++;
+					if(count < total) {
+						print += ",";
+					}
+					System.out.println(print);
 				}
+				System.out.println("]");
 
 			}else{
 				mergeData(cmd, config);
@@ -110,8 +119,8 @@ public class DataMerge {
 		}
 
 		if(type.equals("mysql")) {
-			dbc1 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d1h")+"/"+cmd.getOptionValue("d1")+"?user="+cmd.getOptionValue("d1u")+"&password="+cmd.getOptionValue("d1p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
-			dbc2 = new Mysql("jdbc:mysql://"+cmd.getOptionValue("d2h")+"/"+cmd.getOptionValue("d2")+"?user="+cmd.getOptionValue("d2u")+"&password="+cmd.getOptionValue("d2p")+"&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
+			dbc1 = new Mysql(getMysqlUrl(cmd.getOptionValue("d1h"), cmd.getOptionValue("d1"), cmd.getOptionValue("d1u"), cmd.getOptionValue("d1p")));
+			dbc2 = new Mysql(getMysqlUrl(cmd.getOptionValue("d2h"), cmd.getOptionValue("d2"), cmd.getOptionValue("d2u"), cmd.getOptionValue("d2p")));
 			if(config != null) {
 				db1 = new Database(dbc1, config);
 				db2 = new Database(dbc2, config);
@@ -142,8 +151,8 @@ public class DataMerge {
 		}
 
 		if(type.equals("mysql")) {
-			dbc1 = new Mysql("jdbc:mysql://" + cmd.getOptionValue("d1h") + "/" + cmd.getOptionValue("d1") + "?user=" + cmd.getOptionValue("d1u") + "&password=" + cmd.getOptionValue("d1p") + "&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
-			dbc2 = new Mysql("jdbc:mysql://" + cmd.getOptionValue("d2h") + "/" + cmd.getOptionValue("d2") + "?user=" + cmd.getOptionValue("d2u") + "&password=" + cmd.getOptionValue("d2p") + "&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''");
+			dbc1 = new Mysql(getMysqlUrl(cmd.getOptionValue("d1h"), cmd.getOptionValue("d1"), cmd.getOptionValue("d1u"), cmd.getOptionValue("d1p")));
+			dbc2 = new Mysql(getMysqlUrl(cmd.getOptionValue("d2h"), cmd.getOptionValue("d2"), cmd.getOptionValue("d2u"), cmd.getOptionValue("d2p")));
 			if(config != null) {
 				db1 = new Database(dbc1, config);
 				db2 = new Database(dbc2, config);
@@ -158,5 +167,9 @@ public class DataMerge {
 			return db1.mergeTablesActions(db2);
 		}
 		return null;
+	}
+
+	static String getMysqlUrl(String host, String name, String user, String password) {
+		return "jdbc:mysql://" + host + "/" + name + "?user=" + user + "&password=" + password + "&verifyServerCertificate=false&useSSL=true&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''";
 	}
 }
