@@ -94,7 +94,11 @@ public class Action {
         int totalCount = data.getColumns().size();
         for(String column: data.getColumns()) {
             sb.append("\""+column+"\":");
-            sb.append("\""+data.getVal(column).replace("\"", "\\\"")+"\"");
+            if(data.getVal(column) == null) {
+                sb.append("null");
+            } else {
+                sb.append("\""+data.getVal(column).replace("\"", "\\\"")+"\"");
+            }
             count++;
             if(count < totalCount) {
                 sb.append(",");
