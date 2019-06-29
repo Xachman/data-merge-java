@@ -3,7 +3,7 @@
 
 ## How it works
 
-This project compares rows on a relational database and inserts and updates data on the first provided database with the data on the second provided database.  A list of actions either to insert or update and compiled. Then these actions will be committed on the first provided database.
+This project compares rows on  a relational database and inserts and updates data on the first provided database with the data on the second provided database.  A list of actions either to insert or update is compiled. Then these actions will be committed on the first provided database.
 
 ## Options
 
