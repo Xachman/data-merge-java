@@ -19,4 +19,17 @@ public class ActionTest {
 
         assertEquals(jsonString, action.toJson());
     }
+
+    @Test
+    public void testActionToJsonSanitize() {
+        Row row = new Row();
+        row.setVal("id", "1");
+        row.setVal("name", "john is \"Cool!\"");
+        row.setVal("number", "555-555-5555");
+        Action action = new Action(Action.INSERT, row, "table");
+
+        String jsonString = "{\"table\":\"table\",\"type\":\"insert\",\"row\":{\"number\":\"555-555-5555\",\"name\":\"john is \\\"Cool!\\\"\",\"id\":\"1\"}}";
+
+        assertEquals(jsonString, action.toJson());
+    }
 }
