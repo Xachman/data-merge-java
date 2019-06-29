@@ -28,7 +28,7 @@ usage: database-merge
 
 ## Config
 
-Database Merge tries to find relations using primary and foreign keys.  However when these are not provided you can supply a config file with the config option.
+Database Merge tries to find relations using primary and foreign keys.  However when foreign keys are not provided you can supply a config file with the config option.
 
 Example:
 ~~~ yaml
