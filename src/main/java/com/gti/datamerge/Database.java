@@ -9,11 +9,11 @@ import com.gti.datamerge.config.Config;
 import com.gti.datamerge.database.Relationship;
 import com.gti.datamerge.database.Row;
 import com.gti.datamerge.database.Table;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -83,25 +83,41 @@ public class Database {
         return new Action(type, newRow,  table.getName());
     }
 
-    private boolean isRowInRows(Row row, List<Row> rows) {
-        for(Row dbRow: rows) {
-            int countIsE = 0;
-            int totalCount = 0;
-            for(String key: (Set<String>) row.getMap().keySet()) {
-                String rowVal = (String) row.getMap().get(key);
-                String dbVal = (String) dbRow.getMap().get(key);
-                totalCount++;
-                if(dbVal == null && rowVal == null || dbVal != null && dbVal.equals(rowVal)) {
-                    countIsE++;
-                }
-            }	
-            if(countIsE == totalCount) {
-                return true;
-            }
+    private HashSet<String> createRowHashSet(List<Row> rows) {
+	    HashSet<String> result = new HashSet<>();
+	    for(Row row: rows) {
+            result.add(convertRowToHash(row));
         }
-        return false;
-    } 
+	    return result;
+    }
+    private String convertRowToHash(Row row) {
+        int count = 0;
+        int totalCount = row.getMap().size();
+        String[] strings = new String[totalCount];
+        for(String key: row.getMap().keySet()) {
+            String rowVal =  row.getMap().get(key);
+            strings[count] = rowVal;
+            count++;
+        }
+        return convertStringToHash(String.join(" ",strings));
+    }
+    private String convertStringToHash(String str) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] messageDigest = md.digest(String.join(" ", str).getBytes());
+            BigInteger no = new BigInteger(1, messageDigest);
+            String hashtext = no.toString(16);
 
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public List<Action> mergeTablesActions(Database db2) {
 	    List<Action> actions = new ArrayList<>();
@@ -122,9 +138,12 @@ public class Database {
         List<Action> actions = new ArrayList<>();
         int increment = table.getIncrement();
 
+        HashSet<String> rowsHashes = createRowHashSet(rows);
+
 
         for(Row row: mergeRows) {
-            if(!isRowInRows(row, rows) || table.hasRelationship() && pIds.get(row.getVal(table.getRelationship().getColumn())) != null){
+            String rowHash = convertRowToHash(row);
+            if(!rowsHashes.contains(rowHash) || table.hasRelationship() && pIds.get(row.getVal(table.getRelationship().getColumn())) != null){
                 if(needsUpdate(table, row, rows, pIds)) {
                     actions.add(addAction(Action.UPDATE, row, table, 0));
                     continue;
