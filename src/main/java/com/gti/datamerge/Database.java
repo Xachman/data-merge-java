@@ -201,18 +201,5 @@ public class Database {
         }
 	    return false;
     }
-
-    private List<Table> getBaseTables() {
-        List<Table> bTables = new ArrayList<>();
-        List<Table> tables = dbc.getAllTables();
-
-        for(Table table: tables) {
-            if(!table.hasRelationship()) {
-                bTables.add(table);
-            }
-        }
-        
-        return tables;
-    }
 }
 
