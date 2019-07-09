@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author xach
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({com.gti.datamerge.tests.DataMergeTest.class,DatabaseTest.class, DatabaseConnectionMysqlTest.class})
+@Suite.SuiteClasses({com.gti.datamerge.tests.DataMergeTest.class,DatabaseTest.class, DatabaseConnectionMysqlTest.class, ActionTest.class, com.gti.datamerge.tests.mysql.ActionTest.class, ConfigTest.class})
 public class TestsSuite {
 
 	@BeforeClass

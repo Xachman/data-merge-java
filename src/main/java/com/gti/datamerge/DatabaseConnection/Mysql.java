@@ -301,7 +301,7 @@ public class Mysql implements DatabaseConnectionI {
             case Column.DATETIME:
                 if(value == null) return "'0000-00-00 00:00:00.0'";
             default:
-                return "'"+value+"'";
+                return "'"+value.replace("'","''")+"'";
         }
     }
 
