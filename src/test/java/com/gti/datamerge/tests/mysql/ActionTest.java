@@ -68,7 +68,7 @@ public class ActionTest  extends BaseClass {
 
         Row row = new Row();
         row.setVal("id", "1");
-        row.setVal("content", "<p> 'test' </p>");
+        row.setVal("content", "<p> 'test' \"test2\" `test3` </p>");
         row.setVal("created_date", "2019-07-01 10:00:00");
 
         Action action = new Action(Action.INSERT, row, "posts");
@@ -90,7 +90,7 @@ public class ActionTest  extends BaseClass {
 
             while(rs.next()) {
                 assertEquals(1,rs.getInt(1));
-                assertEquals("<p> 'test' </p>",rs.getString(2));
+                assertEquals("<p> 'test' \"test2\" `test3` </p>",rs.getString(2));
                 assertEquals("2019-07-01 10:00:00.0",rs.getString(3));
             }
 
