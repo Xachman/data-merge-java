@@ -100,6 +100,10 @@ tables:
           title: Title 6
           content: All the content in context for Title 6
           post_author: 5
+        - id: 7
+          title: Title 7
+          content: All the content in context for Title 7
+          post_author: 3
     - name: categories
       data:
           - id: 1
@@ -126,3 +130,5 @@ tables:
             category_id: 1
           - post_id: 6
             category_id: 4
+          - post_id: 7
+            category_id: 2

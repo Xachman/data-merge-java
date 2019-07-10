@@ -72,6 +72,13 @@ actions:
               title: Title 6
               content: All the content in context for Title 6
               post_author: 7
+        - type: insert
+          table: posts
+          row:
+            id: 9
+            title: Title 7
+            content: All the content in context for Title 7
+            post_author: 3
     - table: categories
       actions:
           - type: insert
@@ -91,3 +98,8 @@ actions:
             row:
                 post_id: 8
                 category_id: 4
+          - type: insert
+            table: categories_v_posts
+            row:
+              post_id: 9
+              category_id: 2
