@@ -97,7 +97,7 @@ public class Action {
             if(data.getVal(column) == null) {
                 sb.append("null");
             } else {
-                sb.append("\""+data.getVal(column).replace("\"", "\\\"")+"\"");
+                sb.append("\""+data.getVal(column).replace("\"", "\\\"").replace("\r", "").replace("\n", "\\n")+"\"");
             }
             count++;
             if(count < totalCount) {
