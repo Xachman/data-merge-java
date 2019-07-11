@@ -32,4 +32,5 @@ public class ActionTest {
 
         assertEquals(jsonString, action.toJson());
     }
+
 }
