@@ -20,6 +20,7 @@ usage: database-merge
  -d2h,--database-2-host <arg>       Second database hostname or ip of host
  -d2p,--database-2-password <arg>   Second database password
  -d2u,--database-2-username <arg>   Second database username
+ -f,--file <arg>                    Path to json actions file
  -t,--type <arg>                    Type of connection ex: mysql
     --table <arg>                   Table to be merged
 
