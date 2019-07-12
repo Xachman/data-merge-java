@@ -31,8 +31,9 @@ public class Util {
 
                 JSONObject rowData = (JSONObject) obj.get("row");
 
-                for(Iterator iter = rowData.keySet().iterator(); iterator.hasNext();) {
-                    String key = (String) iter.next();
+                Iterator rowIter = rowData.keySet().iterator();
+                while(rowIter.hasNext()) {
+                    String key = (String) rowIter.next();
                     row.put(key, (String) rowData.get(key));
                 }
                 actions.add(new Action(actionType, row, (String) obj.get("table")));
