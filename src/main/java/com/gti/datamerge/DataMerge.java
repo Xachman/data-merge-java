@@ -6,7 +6,12 @@
 package com.gti.datamerge;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.gti.datamerge.config.Config;
 import com.gti.datamerge.DatabaseConnection.Mysql;
@@ -45,10 +50,8 @@ public class DataMerge {
 		options.addOption(database1Username);
 
 		Option database2Name = new Option("d2", "database-2-name", true, "Second database name");
-		database2Name.setRequired(true);
 		Option database2Password = new Option("d2p", "database-2-password", true, "Second database password");
 		Option database2Host = new Option("d2h", "database-2-host", true, "Second database hostname or ip of host");
-		database2Host.setRequired(true);
 		Option database2Username = new Option("d2u", "database-2-username", true, "Second database username");
 
 		options.addOption(database2Name);
@@ -62,6 +65,9 @@ public class DataMerge {
 
 		Option actionsOption = new Option(null, "actions", false, "Print out all actions that would be taken");
 		options.addOption(actionsOption);
+
+		Option fileOption = new Option("f", "file", true, "Path to json actions file");
+		options.addOption(fileOption);
 
 		Option tableOption = new Option(null, "table", true, "Table to be merged");
 		options.addOption(tableOption);
@@ -95,6 +101,8 @@ public class DataMerge {
 				}
 				System.out.println("]");
 
+			}else if(cmd.hasOption("file")) {
+				insertFileActions(cmd);
 			}else{
 				mergeData(cmd, config);
 			}
@@ -106,7 +114,8 @@ public class DataMerge {
 
 
 	}
-	
+
+
 	static public void mergeData(CommandLine cmd, Config config) {
 		String type = "mysql";
 		DatabaseConnectionI dbc1;
@@ -137,6 +146,24 @@ public class DataMerge {
 
 		}
 
+	}
+
+	static void insertFileActions(CommandLine cmd) {
+		String type = "mysql";
+		DatabaseConnectionI dbc1;
+		Database db1;
+
+		if(cmd.hasOption("t")) {
+			type = cmd.getOptionValue("t");
+		}
+
+		if(type.equals("mysql")) {
+			dbc1 = new Mysql(getMysqlUrl(cmd.getOptionValue("d1h"), cmd.getOptionValue("d1"), cmd.getOptionValue("d1u"), cmd.getOptionValue("d1p")));
+
+			String json  = readFile(cmd.getOptionValue("file"));
+			dbc1.setActions(Util.parseJsonActions(json));
+			dbc1.commit();
+		}
 	}
 
 	static List<Action> getActions(CommandLine cmd, Config config) {
@@ -171,5 +198,19 @@ public class DataMerge {
 
 	static String getMysqlUrl(String host, String name, String user, String password) {
 		return "jdbc:mysql://" + host + "/" + name + "?user=" + user + "&password=" + password + "&verifyServerCertificate=false&useSSL=true&zeroDateTimeBehavior=convertToNull&sessionVariables=sql_mode=''";
+	}
+
+	private static String readFile(String filePath)
+	{
+		StringBuilder contentBuilder = new StringBuilder();
+		try (Stream<String> stream = Files.lines( Paths.get(filePath), StandardCharsets.UTF_8))
+		{
+			stream.forEach(s -> contentBuilder.append(s).append("\n"));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return contentBuilder.toString();
 	}
 }
